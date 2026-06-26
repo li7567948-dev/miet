@@ -1,0 +1,44 @@
+import java.util.Scanner;
+import java.lang.Math;
+
+// Лабораторная работа №1
+// Тема: Введение в ООП (Классы и объекты)
+
+class Point3D {
+    double x, y, z;
+
+    public Point3D(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+    
+    public double distanceTo(Point3D p) {
+        return Math.sqrt(Math.pow(p.x - this.x, 2) + 
+                         Math.pow(p.y - this.y, 2) + 
+                         Math.pow(p.z - this.z, 2));
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        
+        System.out.print("Введите координаты первой точки (X Y Z): ");
+        double x1 = in.nextDouble();
+        double y1 = in.nextDouble();
+        double z1 = in.nextDouble();
+        Point3D p1 = new Point3D(x1, y1, z1);
+        
+        System.out.print("Введите координаты второй точки (X Y Z): ");
+        double x2 = in.nextDouble();
+        double y2 = in.nextDouble();
+        double z2 = in.nextDouble();
+        Point3D p2 = new Point3D(x2, y2, z2);
+        
+        double dist = p1.distanceTo(p2);
+        System.out.printf("Расстояние между точками: %.3f\n", dist);
+        
+        in.close();
+    }
+}
