@@ -1,0 +1,839 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Random;
+import java.util.Scanner;
+
+// Лабораторная работа №2, вариант с_7
+// Модель пропускного автомобильного пункта
+public class Main {
+    static Scanner in = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println();
+            System.out.println("===== ПУНКТ ПРОПУСКА =====");
+            System.out.println("1 - Демонстрация метода Pass (готовые машины)");
+            System.out.println("2 - Проверить свою машину (ввод с клавиатуры)");
+            System.out.println("3 - Моделирование очереди (3 поста + генератор)");
+            System.out.println("0 - Выход");
+            System.out.print("Ваш выбор: ");
+            int choice = ReadInt();
+
+            if (choice == 1) {
+                Demo();
+            } else if (choice == 2) {
+                UserCar();
+            } else if (choice == 3) {
+                Modeling();
+            } else if (choice == 0) {
+                System.out.println("Bye!");
+                break;
+            } else {
+                System.out.println("Нет такого пункта");
+            }
+        }
+    }
+
+    // part 3: different vehicles go through the post
+    static void Demo() {
+        // Vehicle v = new Vehicle(...) - error, class is abstract!
+        Vehicle[] cars = {
+            new Car("А123ВС", 4.5, 1.8, 1.5, 1.6, 50, CargoType.SAFE),          // ok
+            new Car("В777ОР", 4.8, 1.9, 1.6, 2.0, 75, CargoType.SAFE),          // too fast
+            new Car("Е001КХ", 4.9, 1.9, 1.7, 2.2, 40, CargoType.FLAMMABLE),     // bad cargo
+            new Truck("К555МН", 10.0, 2.5, 3.8, 20.0, 35, CargoType.SAFE),      // ok
+            new Truck("М404ТТ", 11.0, 2.5, 3.9, 30.0, 15, CargoType.CHEMICAL),  // too heavy
+            new Bus("Н321АА", 12.0, 2.5, 3.5, 15.0, 30, CargoType.SAFE),        // ok
+            new Bus("О999СС", 12.0, 2.5, 3.5, 15.0, 30, CargoType.FLAMMABLE),   // bad cargo
+            new Trailer("Р100ХУ", 16.5, 2.55, 4.0, 40.0, 10, CargoType.EXPLOSIVE), // ok, slow
+            new Trailer("С200УК", 16.5, 2.55, 4.3, 40.0, 25, CargoType.EXPLOSIVE), // high + fast
+            new CarWithTrailer("Т300ЕЕ", 8.0, 2.0, 2.5, 3.0, 30, CargoType.SAFE)   // ok
+        };
+
+        for (Vehicle v : cars) {
+            System.out.println(v); // toString works here
+            CheckOne(v);
+            System.out.println();
+        }
+    }
+
+    // polymorphism: v.Pass() calls method of real class (Car, Truck ...)
+    static void CheckOne(Vehicle v) {
+        if (v.Pass()) {
+            System.out.println("  -> ПРОПУЩЕН. Время контроля: " + v.GetCheckTime() + " мин");
+        } else {
+            System.out.println("  -> НЕ ПРОПУЩЕН: " + v.GetProblems());
+        }
+    }
+
+    static void UserCar() {
+        System.out.println("Тип: 1-легковая, 2-грузовик, 3-автобус, 4-трейлер, 5-авто с прицепом");
+        int type = ReadInt();
+        System.out.print("Номер: ");
+        String num = in.next();
+        System.out.print("Длина (м): ");
+        double l = ReadDouble();
+        System.out.print("Ширина (м): ");
+        double w = ReadDouble();
+        System.out.print("Высота (м): ");
+        double h = ReadDouble();
+        System.out.print("Масса (т): ");
+        double m = ReadDouble();
+        System.out.print("Скорость (км/ч): ");
+        int s = ReadInt();
+        System.out.println("Груз: 1-безопасный, 2-огнеопасный, 3-хим. опасный, 4-взрывоопасный, 5-особой важности");
+        int c = ReadInt();
+        CargoType cargo = CargoType.values()[c - 1]; // no input check in this lab (ЛР №4)
+
+        Vehicle v;
+        switch (type) {
+            case 1:  v = new Car(num, l, w, h, m, s, cargo); break;
+            case 2:  v = new Truck(num, l, w, h, m, s, cargo); break;
+            case 3:  v = new Bus(num, l, w, h, m, s, cargo); break;
+            case 4:  v = new Trailer(num, l, w, h, m, s, cargo); break;
+            default: v = new CarWithTrailer(num, l, w, h, m, s, cargo);
+        }
+        System.out.println(v);
+        System.out.println("Ограничения: длина<=" + v.GetMaxLength() + ", ширина<=" + v.GetMaxWidth()
+                + ", высота<=" + v.GetMaxHeight() + ", масса<=" + v.GetMaxWeight()
+                + ", скорость<=" + v.GetMaxSpeed());
+        CheckOne(v);
+    }
+
+    // part 4: generator + 3 posts
+    static void Modeling() {
+        System.out.println("Поток машин: 1-слабый, 2-средний, 3-сильный, 4-свой");
+        int f = ReadInt();
+        int minGap, maxGap;
+        if (f == 1) {
+            minGap = 4; maxGap = 8;
+        } else if (f == 2) {
+            minGap = 1; maxGap = 4;
+        } else if (f == 3) {
+            minGap = 0; maxGap = 2;
+        } else {
+            System.out.print("Мин. интервал между машинами (мин): ");
+            minGap = ReadInt();
+            System.out.print("Макс. интервал между машинами (мин): ");
+            maxGap = ReadInt();
+        }
+        System.out.print("Сколько минут моделировать: ");
+        int time = ReadInt();
+
+        System.out.println("Интервал между машинами: " + minGap + ".." + maxGap + " мин");
+        Simulation sim = new Simulation(minGap, maxGap, time);
+        sim.Run();
+    }
+
+    // small helpers. replace ',' because russian Windows writes 3,5
+    static int ReadInt() {
+        return Integer.parseInt(in.next().trim());
+    }
+
+    static double ReadDouble() {
+        return Double.parseDouble(in.next().replace(',', '.'));
+    }
+}
+
+
+// Классы груза (cargo types)
+// extraTime - how many minutes we add to check this cargo
+enum CargoType {
+    SAFE("безопасный", 0, false),
+    FLAMMABLE("огнеопасный", 2, true),
+    CHEMICAL("химически опасный", 3, true),
+    EXPLOSIVE("взрывоопасный", 5, true),
+    SPECIAL("особой важности", 2, false);
+
+    private String name;
+    private int extraTime;
+    private boolean dangerous;
+
+    CargoType(String name, int extraTime, boolean dangerous) {
+        this.name = name;
+        this.extraTime = extraTime;
+        this.dangerous = dangerous;
+    }
+
+    public String GetName() {
+        return name;
+    }
+
+    public int GetExtraTime() {
+        return extraTime;
+    }
+
+    // dangerous cargo = slow speed on the post
+    public boolean IsDangerous() {
+        return dangerous;
+    }
+}
+
+
+// Абстрактный класс "Транспортное средство"
+// we can not create just "Vehicle", only Car, Truck, Bus ...
+abstract class Vehicle {
+    // max speed for dangerous cargo (for all types)
+    public static final int DANGER_MAX_SPEED = 20;
+
+    private String number;   // гос. номер
+    private double length;   // длина, м
+    private double width;    // ширина, м
+    private double height;   // высота, м
+    private double weight;   // масса, т
+    private int speed;       // скорость на въезде, км/ч
+    private CargoType cargo; // класс груза
+
+    private int arriveMinute; // for queue (part 4)
+    protected String problems = ""; // why car can not pass
+
+    protected Vehicle(String number, double length, double width, double height,
+                      double weight, int speed, CargoType cargo) {
+        this.number = number;
+        this.length = length;
+        this.width = width;
+        this.height = height;
+        this.weight = weight;
+        this.speed = speed;
+        this.cargo = cargo;
+    }
+
+    // ---- getters / setters ----
+    public String GetNumber() {
+        return number;
+    }
+
+    public double GetLength() {
+        return length;
+    }
+
+    public double GetWidth() {
+        return width;
+    }
+
+    public double GetHeight() {
+        return height;
+    }
+
+    public double GetWeight() {
+        return weight;
+    }
+
+    public int GetSpeed() {
+        return speed;
+    }
+
+    public void SetSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public CargoType GetCargo() {
+        return cargo;
+    }
+
+    public int GetArriveMinute() {
+        return arriveMinute;
+    }
+
+    public void SetArriveMinute(int arriveMinute) {
+        this.arriveMinute = arriveMinute;
+    }
+
+    public String GetProblems() {
+        return problems;
+    }
+
+    protected void AddProblem(String text) {
+        problems += text + "; ";
+    }
+
+    // ---- limits, every child class must say its own ----
+    public abstract String GetTypeName();
+    public abstract double GetMaxLength();
+    public abstract double GetMaxWidth();
+    public abstract double GetMaxHeight();
+    public abstract double GetMaxWeight();
+    public abstract int GetMaxSpeed();
+    protected abstract int GetBaseCheckTime(); // minutes, depends on size
+
+    // время прохождения контроля = размер машины + тип груза
+    public int GetCheckTime() {
+        return GetBaseCheckTime() + cargo.GetExtraTime();
+    }
+
+    // Метод Pass - check size, weight and speed
+    // children override it and add cargo rules
+    public boolean Pass() {
+        problems = "";
+
+        if (length > GetMaxLength())
+            AddProblem("длина " + length + " > " + GetMaxLength() + " м");
+        if (width > GetMaxWidth())
+            AddProblem("ширина " + width + " > " + GetMaxWidth() + " м");
+        if (height > GetMaxHeight())
+            AddProblem("высота " + height + " > " + GetMaxHeight() + " м");
+        if (weight > GetMaxWeight())
+            AddProblem("масса " + weight + " > " + GetMaxWeight() + " т");
+
+        int maxSpeed = GetMaxSpeed();
+        if (cargo.IsDangerous() && maxSpeed > DANGER_MAX_SPEED) {
+            maxSpeed = DANGER_MAX_SPEED; // dangerous -> go slow
+        }
+        if (speed > maxSpeed)
+            AddProblem("скорость " + speed + " > " + maxSpeed + " км/ч");
+
+        return problems.isEmpty();
+    }
+
+    // переопределяем toString (like in the example with Human)
+    public String toString() {
+        return GetTypeName() + " [" + number + "] " + length + "x" + width + "x" + height + " м, "
+                + weight + " т, " + speed + " км/ч, груз: " + cargo.GetName();
+    }
+}
+
+
+// Легковая машина
+class Car extends Vehicle {
+
+    public Car(String number, double length, double width, double height,
+               double weight, int speed, CargoType cargo) {
+        super(number, length, width, height, weight, speed, cargo); // call parent constructor
+    }
+
+    public String GetTypeName() {
+        return "Легковая";
+    }
+
+    public double GetMaxLength() {
+        return 5.0;
+    }
+
+    public double GetMaxWidth() {
+        return 2.0;
+    }
+
+    public double GetMaxHeight() {
+        return 2.0;
+    }
+
+    public double GetMaxWeight() {
+        return 3.5;
+    }
+
+    public int GetMaxSpeed() {
+        return 60;
+    }
+
+    protected int GetBaseCheckTime() {
+        return 1; // small car - fast check
+    }
+
+    // car can carry only safe cargo or special (documents, money...)
+    @Override
+    public boolean Pass() {
+        boolean ok = super.Pass();
+        if (GetCargo() != CargoType.SAFE && GetCargo() != CargoType.SPECIAL) {
+            AddProblem("легковой нельзя везти " + GetCargo().GetName() + " груз");
+            ok = false;
+        }
+        return ok;
+    }
+}
+
+
+// Грузовик
+class Truck extends Vehicle {
+
+    public Truck(String number, double length, double width, double height,
+                 double weight, int speed, CargoType cargo) {
+        super(number, length, width, height, weight, speed, cargo);
+    }
+
+    public String GetTypeName() {
+        return "Грузовик";
+    }
+
+    public double GetMaxLength() {
+        return 12.0;
+    }
+
+    public double GetMaxWidth() {
+        return 2.55;
+    }
+
+    public double GetMaxHeight() {
+        return 4.0;
+    }
+
+    public double GetMaxWeight() {
+        return 26.0;
+    }
+
+    public int GetMaxSpeed() {
+        return 40;
+    }
+
+    protected int GetBaseCheckTime() {
+        return 3;
+    }
+
+    // truck can carry everything except explosive (only trailer can)
+    @Override
+    public boolean Pass() {
+        boolean ok = super.Pass();
+        if (GetCargo() == CargoType.EXPLOSIVE) {
+            AddProblem("взрывоопасный груз только на спец. трейлере");
+            ok = false;
+        }
+        return ok;
+    }
+}
+
+
+// Автобус
+class Bus extends Vehicle {
+
+    public Bus(String number, double length, double width, double height,
+               double weight, int speed, CargoType cargo) {
+        super(number, length, width, height, weight, speed, cargo);
+    }
+
+    public String GetTypeName() {
+        return "Автобус";
+    }
+
+    public double GetMaxLength() {
+        return 15.0;
+    }
+
+    public double GetMaxWidth() {
+        return 2.55;
+    }
+
+    public double GetMaxHeight() {
+        return 4.0;
+    }
+
+    public double GetMaxWeight() {
+        return 18.0;
+    }
+
+    public int GetMaxSpeed() {
+        return 40;
+    }
+
+    protected int GetBaseCheckTime() {
+        return 2;
+    }
+
+    // people inside -> only safe cargo, no exceptions
+    @Override
+    public boolean Pass() {
+        boolean ok = super.Pass();
+        if (GetCargo() != CargoType.SAFE) {
+            AddProblem("в автобусе с людьми только безопасный груз");
+            ok = false;
+        }
+        return ok;
+    }
+}
+
+
+// Трейлер (седельный тягач с полуприцепом)
+class Trailer extends Vehicle {
+
+    public Trailer(String number, double length, double width, double height,
+                   double weight, int speed, CargoType cargo) {
+        super(number, length, width, height, weight, speed, cargo);
+    }
+
+    public String GetTypeName() {
+        return "Трейлер";
+    }
+
+    public double GetMaxLength() {
+        return 20.0;
+    }
+
+    public double GetMaxWidth() {
+        return 2.55;
+    }
+
+    public double GetMaxHeight() {
+        return 4.0;
+    }
+
+    public double GetMaxWeight() {
+        return 44.0;
+    }
+
+    public int GetMaxSpeed() {
+        return 30;
+    }
+
+    protected int GetBaseCheckTime() {
+        return 4; // big one - long check
+    }
+
+    // trailer can carry any cargo,
+    // but explosive one must go very slow (10 km/h)
+    @Override
+    public boolean Pass() {
+        boolean ok = super.Pass();
+        if (GetCargo() == CargoType.EXPLOSIVE && GetSpeed() > 10) {
+            AddProblem("со взрывоопасным грузом не больше 10 км/ч");
+            ok = false;
+        }
+        return ok;
+    }
+}
+
+
+// Легковой автомобиль с прицепом
+class CarWithTrailer extends Vehicle {
+
+    public CarWithTrailer(String number, double length, double width, double height,
+                          double weight, int speed, CargoType cargo) {
+        super(number, length, width, height, weight, speed, cargo);
+    }
+
+    public String GetTypeName() {
+        return "Авто с прицепом";
+    }
+
+    public double GetMaxLength() {
+        return 10.0;
+    }
+
+    public double GetMaxWidth() {
+        return 2.2;
+    }
+
+    public double GetMaxHeight() {
+        return 3.0;
+    }
+
+    public double GetMaxWeight() {
+        return 5.0;
+    }
+
+    public int GetMaxSpeed() {
+        return 40;
+    }
+
+    protected int GetBaseCheckTime() {
+        return 2;
+    }
+
+    // private trailer - only safe cargo or flammable (like fuel cans)
+    @Override
+    public boolean Pass() {
+        boolean ok = super.Pass();
+        if (GetCargo() != CargoType.SAFE && GetCargo() != CargoType.FLAMMABLE) {
+            AddProblem("на прицепе нельзя везти " + GetCargo().GetName() + " груз");
+            ok = false;
+        }
+        return ok;
+    }
+}
+
+
+// Один пункт пропуска (one post / one line)
+class CheckPoint {
+    private int id;
+    private boolean open = false;
+    private Vehicle current = null; // car on the post now
+    private int timeLeft = 0;       // minutes left for this car
+    private int served = 0;         // how many cars checked
+
+    public CheckPoint(int id) {
+        this.id = id;
+    }
+
+    public int GetId() {
+        return id;
+    }
+
+    public boolean IsOpen() {
+        return open;
+    }
+
+    public void Open() {
+        open = true;
+    }
+
+    public void Close() {
+        open = false;
+    }
+
+    public boolean IsFree() {
+        return current == null;
+    }
+
+    public int GetTimeLeft() {
+        return timeLeft;
+    }
+
+    public int GetServed() {
+        return served;
+    }
+
+    // take next car from queue
+    public void Take(Vehicle v) {
+        current = v;
+        timeLeft = v.GetCheckTime();
+    }
+
+    // one minute goes. If car is done - return it, else null
+    public Vehicle Tick() {
+        if (current == null)
+            return null;
+        timeLeft--;
+        if (timeLeft <= 0) {
+            Vehicle done = current;
+            current = null;
+            served++;
+            return done;
+        }
+        return null;
+    }
+}
+
+
+// Генератор машин: random cars, random time between them (in range)
+class CarGenerator {
+    private Random rnd = new Random();
+    private int minGap; // min minutes between cars
+    private int maxGap; // max minutes between cars
+    private int nextArrival = 0;
+
+    private static final String LETTERS = "АВЕКМНОРСТУХ"; // letters for car numbers
+
+    public CarGenerator(int minGap, int maxGap) {
+        this.minGap = minGap;
+        this.maxGap = maxGap;
+    }
+
+    // all cars that come at this minute
+    public ArrayList<Vehicle> Generate(int minute) {
+        ArrayList<Vehicle> list = new ArrayList<Vehicle>();
+        while (nextArrival <= minute) {
+            list.add(RandomVehicle());
+            nextArrival += minGap + rnd.nextInt(maxGap - minGap + 1);
+        }
+        return list;
+    }
+
+    // random double from a to b, round to 0.1
+    private double Rand(double a, double b) {
+        double x = a + rnd.nextDouble() * (b - a);
+        return Math.round(x * 10) / 10.0;
+    }
+
+    private int Rand(int a, int b) {
+        return a + rnd.nextInt(b - a + 1);
+    }
+
+    private String RandomNumber() {
+        String s = "";
+        s += LETTERS.charAt(rnd.nextInt(LETTERS.length()));
+        s += Rand(100, 999);
+        s += LETTERS.charAt(rnd.nextInt(LETTERS.length()));
+        s += LETTERS.charAt(rnd.nextInt(LETTERS.length()));
+        return s;
+    }
+
+    private CargoType RandomCargo() {
+        // most cars are safe, about 75%
+        if (rnd.nextInt(100) < 75)
+            return CargoType.SAFE;
+        CargoType[] all = CargoType.values();
+        return all[rnd.nextInt(all.length)];
+    }
+
+    // speed: drivers with dangerous cargo usually go slow
+    private int RandSpeed(int min, int max, CargoType cargo) {
+        if (cargo.IsDangerous())
+            return Rand(5, 22);
+        return Rand(min, max);
+    }
+
+    // ranges are a bit bigger than limits, so some cars will fail - it's ok
+    public Vehicle RandomVehicle() {
+        String num = RandomNumber();
+        CargoType cargo = RandomCargo();
+        int type = rnd.nextInt(5);
+
+        switch (type) {
+            case 0:
+                return new Car(num, Rand(3.5, 5.1), Rand(1.6, 2.0), Rand(1.4, 2.0),
+                        Rand(1.0, 3.6), RandSpeed(20, 62, cargo), cargo);
+            case 1:
+                return new Truck(num, Rand(6.0, 12.2), Rand(2.2, 2.55), Rand(2.8, 4.1),
+                        Rand(5.0, 27.0), RandSpeed(10, 41, cargo), cargo);
+            case 2:
+                return new Bus(num, Rand(8.0, 15.0), Rand(2.3, 2.55), Rand(2.8, 4.0),
+                        Rand(8.0, 18.5), RandSpeed(15, 41, cargo), cargo);
+            case 3:
+                return new Trailer(num, Rand(14.0, 20.3), Rand(2.45, 2.55), Rand(3.5, 4.05),
+                        Rand(15.0, 45.0), RandSpeed(5, 31, cargo), cargo);
+            default:
+                return new CarWithTrailer(num, Rand(6.0, 10.2), Rand(1.8, 2.2), Rand(1.5, 3.0),
+                        Rand(2.0, 5.2), RandSpeed(15, 42, cargo), cargo);
+        }
+    }
+}
+
+
+// Моделирование работы пункта пропуска (part 4)
+// post 1 always open, post 2 and 3 open when wait > 10 min
+class Simulation {
+    public static final int MAX_WAIT = 10; // minutes
+
+    private CheckPoint[] posts = new CheckPoint[3];
+    private LinkedList<Vehicle> queue = new LinkedList<Vehicle>();
+    private CarGenerator generator;
+    private int duration; // minutes when new cars come
+
+    // statistics
+    private int arrived = 0;
+    private int passed = 0;
+    private int rejected = 0;
+    private int maxQueue = 0;
+    private int totalWait = 0;
+    private int maxWait = 0;
+    private int startedChecks = 0;
+
+    public Simulation(int minGap, int maxGap, int duration) {
+        generator = new CarGenerator(minGap, maxGap);
+        this.duration = duration;
+        for (int i = 0; i < posts.length; i++) {
+            posts[i] = new CheckPoint(i + 1);
+        }
+        posts[0].Open(); // first post always works
+    }
+
+    private int OpenCount() {
+        int n = 0;
+        for (CheckPoint p : posts)
+            if (p.IsOpen()) n++;
+        return n;
+    }
+
+    // how long new car will wait (approx)
+    private int ExpectedWait() {
+        int sum = 0;
+        for (Vehicle v : queue)
+            sum += v.GetCheckTime();
+        for (CheckPoint p : posts)
+            if (p.IsOpen()) sum += p.GetTimeLeft();
+        return sum / OpenCount();
+    }
+
+    public void Run() {
+        int minute = 0;
+        // work until time is over AND everybody is checked
+        while (minute < duration || !queue.isEmpty() || !AllFree()) {
+
+            // 1) new cars come
+            if (minute < duration) {
+                ArrayList<Vehicle> newCars = generator.Generate(minute);
+                for (Vehicle v : newCars) {
+                    v.SetArriveMinute(minute);
+                    queue.add(v);
+                    arrived++;
+                    System.out.println(Time(minute) + "приехал: " + v);
+                }
+            } else if (minute == duration) {
+                System.out.println(Time(minute) + "--- въезд закрыт, дообслуживаем очередь ---");
+            }
+
+            // 2) posts work one minute
+            for (CheckPoint p : posts) {
+                Vehicle done = p.Tick();
+                if (done != null) {
+                    if (done.Pass()) {
+                        passed++;
+                        System.out.println(Time(minute) + "[Пост " + p.GetId() + "] ПРОПУЩЕН: "
+                                + done.GetTypeName() + " " + done.GetNumber());
+                    } else {
+                        rejected++;
+                        System.out.println(Time(minute) + "[Пост " + p.GetId() + "] НЕ ПРОПУЩЕН: "
+                                + done.GetTypeName() + " " + done.GetNumber() + " (" + done.GetProblems() + ")");
+                    }
+                }
+            }
+
+            // 3) open or close extra posts
+            CheckOpenClose(minute);
+
+            // 4) free posts take cars from queue
+            for (CheckPoint p : posts) {
+                if (p.IsOpen() && p.IsFree() && !queue.isEmpty()) {
+                    Vehicle v = queue.poll();
+                    int wait = minute - v.GetArriveMinute();
+                    totalWait += wait;
+                    startedChecks++;
+                    if (wait > maxWait) maxWait = wait;
+                    p.Take(v);
+                }
+            }
+
+            if (queue.size() > maxQueue) maxQueue = queue.size();
+            minute++;
+        }
+
+        PrintResult(minute);
+    }
+
+    private void CheckOpenClose(int minute) {
+        // open next post if wait is too long
+        if (ExpectedWait() > MAX_WAIT) {
+            for (CheckPoint p : posts) {
+                if (!p.IsOpen()) {
+                    p.Open();
+                    System.out.println(Time(minute) + ">>> ожидание больше " + MAX_WAIT
+                            + " мин, ОТКРЫТ пост " + p.GetId() + " (в очереди " + queue.size() + ")");
+                    break; // open only one per minute
+                }
+            }
+        }
+        // no queue -> close extra free posts (not post 1)
+        if (queue.isEmpty()) {
+            for (int i = posts.length - 1; i > 0; i--) {
+                if (posts[i].IsOpen() && posts[i].IsFree()) {
+                    posts[i].Close();
+                    System.out.println(Time(minute) + "<<< очереди нет, ЗАКРЫТ пост " + posts[i].GetId());
+                }
+            }
+        }
+    }
+
+    private boolean AllFree() {
+        for (CheckPoint p : posts)
+            if (!p.IsFree()) return false;
+        return true;
+    }
+
+    private String Time(int minute) {
+        return String.format("%3d мин | ", minute);
+    }
+
+    private void PrintResult(int minute) {
+        System.out.println();
+        System.out.println("========== ИТОГ ==========");
+        System.out.println("Время работы: " + minute + " мин");
+        System.out.println("Приехало машин: " + arrived);
+        System.out.println("Пропущено: " + passed);
+        System.out.println("Не пропущено: " + rejected);
+        System.out.println("Макс. очередь: " + maxQueue + " машин");
+        if (startedChecks > 0) {
+            System.out.printf("Среднее ожидание: %.1f мин%n", (double) totalWait / startedChecks);
+        }
+        System.out.println("Макс. ожидание: " + maxWait + " мин");
+        for (CheckPoint p : posts) {
+            System.out.println("Пост " + p.GetId() + " проверил: " + p.GetServed() + " машин");
+        }
+    }
+}
