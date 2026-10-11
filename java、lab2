@@ -327,3 +327,254 @@ class Trailer extends Vehicle {
 
     // any cargo, but explosive - max 10 km/h
     @Override
+    public boolean Pass() {
+        boolean ok = super.Pass();
+        if (GetCargo().equals(BOOM) && GetSpeed() > 10 && GetSpeed() <= 20) {
+            reason += "со взрывоопасным не больше 10 км/ч; ";
+            ok = false;
+        }
+        return ok;
+    }
+}
+
+
+class CarWithTrailer extends Vehicle {
+    public CarWithTrailer(String number, double length, double width, double height,
+                          double weight, int speed, String cargo) {
+        super(number, length, width, height, weight, speed, cargo);
+    }
+
+    public String GetType() { return "С прицепом"; }
+    public double GetMaxLength() { return 10.0; }
+    public double GetMaxWidth() { return 2.2; }
+    public double GetMaxHeight() { return 3.0; }
+    public double GetMaxWeight() { return 5.0; }
+    public int GetMaxSpeed() { return 40; }
+
+    // safe or flammable only
+    @Override
+    public boolean Pass() {
+        boolean ok = super.Pass();
+        if (!GetCargo().equals(SAFE) && !GetCargo().equals(FIRE)) {
+            reason += "на прицепе нельзя такой груз; ";
+            ok = false;
+        }
+        return ok;
+    }
+}
+
+
+// один пост пропуска
+class CheckPoint {
+    private int id;
+    private boolean open = false;
+    private Vehicle car = null; // car on post now
+    private int timeLeft = 0;
+    private int count = 0;      // how many cars checked
+
+    public CheckPoint(int id) {
+        this.id = id;
+    }
+
+    public int GetId() { return id; }
+    public boolean IsOpen() { return open; }
+    public void SetOpen(boolean open) { this.open = open; }
+    public boolean IsFree() { return car == null; }
+    public int GetTimeLeft() { return timeLeft; }
+    public int GetCount() { return count; }
+
+    public void Take(Vehicle v) {
+        car = v;
+        timeLeft = v.GetCheckTime();
+    }
+
+    // 1 minute passed, return car if check is done
+    public Vehicle Work() {
+        if (car == null) return null;
+        timeLeft--;
+        if (timeLeft > 0) return null;
+        Vehicle done = car;
+        car = null;
+        count++;
+        return done;
+    }
+}
+
+
+// генератор машин
+class Generator {
+    private Random rnd = new Random();
+    private int min, max;  // interval between cars, minutes
+    private int next = 0;  // when next car comes
+
+    public Generator(int min, int max) {
+        this.min = min;
+        this.max = max;
+    }
+
+    // cars that come at this minute
+    public ArrayList<Vehicle> NewCars(int minute) {
+        ArrayList<Vehicle> list = new ArrayList<Vehicle>();
+        while (next <= minute) {
+            list.add(RandomCar());
+            next = next + min + rnd.nextInt(max - min + 1);
+        }
+        return list;
+    }
+
+    private double R(double a, double b) {
+        return Math.round((a + rnd.nextDouble() * (b - a)) * 10) / 10.0;
+    }
+
+    private int R(int a, int b) {
+        return a + rnd.nextInt(b - a + 1);
+    }
+
+    public Vehicle RandomCar() {
+        String num = "А" + R(100, 999) + "ВС";
+
+        String cargo = Vehicle.SAFE; // most cars are safe
+        if (rnd.nextInt(4) == 0) cargo = Vehicle.CARGO[rnd.nextInt(5)];
+
+        int type = rnd.nextInt(5);
+        // sometimes a bit bigger than limit, so not all cars pass
+        if (type == 0)
+            return new Car(num, R(3.5, 5.1), R(1.6, 2.0), R(1.4, 2.0), R(1.0, 3.6), Speed(20, 62, cargo), cargo);
+        if (type == 1)
+            return new Truck(num, R(6.0, 12.2), R(2.2, 2.55), R(2.8, 4.1), R(5.0, 27.0), Speed(10, 41, cargo), cargo);
+        if (type == 2)
+            return new Bus(num, R(8.0, 15.0), R(2.3, 2.55), R(2.8, 4.0), R(8.0, 18.5), Speed(15, 41, cargo), cargo);
+        if (type == 3)
+            return new Trailer(num, R(14.0, 20.3), R(2.45, 2.55), R(3.5, 4.05), R(15.0, 45.0), Speed(5, 31, cargo), cargo);
+        return new CarWithTrailer(num, R(6.0, 10.2), R(1.8, 2.2), R(1.5, 3.0), R(2.0, 5.2), Speed(15, 42, cargo), cargo);
+    }
+
+    // with dangerous cargo drivers go slow
+    private int Speed(int a, int b, String cargo) {
+        if (cargo.equals(Vehicle.FIRE) || cargo.equals(Vehicle.CHEMICAL) || cargo.equals(Vehicle.BOOM))
+            return R(5, 22);
+        return R(a, b);
+    }
+}
+
+
+// моделирование: пост 1 работает всегда,
+// пост 2 и 3 открываются если ждать больше 10 минут
+class Simulation {
+    private CheckPoint[] posts = new CheckPoint[3];
+    private ArrayList<Vehicle> queue = new ArrayList<Vehicle>();
+    private Generator gen;
+    private int time;
+
+    private int all = 0, passed = 0, notPassed = 0;
+    private int maxQueue = 0, waitSum = 0, maxWait = 0;
+
+    public Simulation(int min, int max, int time) {
+        gen = new Generator(min, max);
+        this.time = time;
+        for (int i = 0; i < 3; i++) {
+            posts[i] = new CheckPoint(i + 1);
+        }
+        posts[0].SetOpen(true);
+    }
+
+    // примерное время ожидания в очереди
+    private int WaitTime() {
+        int sum = 0;
+        int open = 0;
+        for (int i = 0; i < 3; i++) {
+            if (posts[i].IsOpen()) {
+                sum += posts[i].GetTimeLeft();
+                open++;
+            }
+        }
+        for (int i = 0; i < queue.size(); i++) {
+            sum += queue.get(i).GetCheckTime();
+        }
+        return sum / open;
+    }
+
+    private boolean AllFree() {
+        for (int i = 0; i < 3; i++) {
+            if (!posts[i].IsFree()) return false;
+        }
+        return true;
+    }
+
+    public void Run() {
+        int t = 0;
+        while (t < time || queue.size() > 0 || !AllFree()) {
+            // 1. new cars
+            if (t < time) {
+                ArrayList<Vehicle> newCars = gen.NewCars(t);
+                for (int i = 0; i < newCars.size(); i++) {
+                    Vehicle v = newCars.get(i);
+                    v.SetArriveTime(t);
+                    queue.add(v);
+                    all++;
+                    System.out.println(t + " мин: приехал " + v);
+                }
+            }
+
+            // 2. posts work
+            for (int i = 0; i < 3; i++) {
+                Vehicle v = posts[i].Work();
+                if (v != null) {
+                    if (v.Pass()) {
+                        passed++;
+                        System.out.println(t + " мин: пост " + (i + 1) + " ПРОПУСТИЛ " + v.GetType() + " " + v.GetNumber());
+                    } else {
+                        notPassed++;
+                        System.out.println(t + " мин: пост " + (i + 1) + " НЕ ПРОПУСТИЛ " + v.GetType() + " " + v.GetNumber() + " (" + v.GetReason() + ")");
+                    }
+                }
+            }
+
+            // 3. open new post if wait > 10 min
+            if (WaitTime() > 10) {
+                for (int i = 1; i < 3; i++) {
+                    if (!posts[i].IsOpen()) {
+                        posts[i].SetOpen(true);
+                        System.out.println(t + " мин: >>> ОТКРЫТ пост " + (i + 1) + ", в очереди " + queue.size());
+                        break;
+                    }
+                }
+            }
+            // close extra posts if no queue
+            if (queue.size() == 0) {
+                for (int i = 1; i < 3; i++) {
+                    if (posts[i].IsOpen() && posts[i].IsFree()) {
+                        posts[i].SetOpen(false);
+                        System.out.println(t + " мин: <<< ЗАКРЫТ пост " + (i + 1));
+                    }
+                }
+            }
+
+            // 4. free posts take next car
+            for (int i = 0; i < 3; i++) {
+                if (posts[i].IsOpen() && posts[i].IsFree() && queue.size() > 0) {
+                    Vehicle v = queue.remove(0);
+                    int wait = t - v.GetArriveTime();
+                    waitSum += wait;
+                    if (wait > maxWait) maxWait = wait;
+                    posts[i].Take(v);
+                }
+            }
+
+            if (queue.size() > maxQueue) maxQueue = queue.size();
+            t++;
+        }
+
+        System.out.println();
+        System.out.println("===== ИТОГ =====");
+        System.out.println("Всего машин: " + all);
+        System.out.println("Пропущено: " + passed);
+        System.out.println("Не пропущено: " + notPassed);
+        System.out.println("Макс. очередь: " + maxQueue);
+        if (all > 0) System.out.println("Среднее ожидание: " + Math.round(waitSum * 10.0 / all) / 10.0 + " мин");
+        System.out.println("Макс. ожидание: " + maxWait + " мин");
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Пост " + (i + 1) + " проверил " + posts[i].GetCount() + " машин");
+        }
+    }
+}
