@@ -1,136 +1,24 @@
+package lab2;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 // Лабораторная работа №2, вариант с_7
 // Пункт пропуска автомобилей
+// MVC: Model - машины, посты, генератор, моделирование
+//      View - ConsoleView (only input / output)
+//      Controller - Controller (connects model and view)
 public class Main {
-    static Scanner in = new Scanner(System.in);
-
     public static void main(String[] args) {
-        int choice = -1;
-        while (choice != 0) {
-            System.out.println();
-            System.out.println("===== ПУНКТ ПРОПУСКА =====");
-            System.out.println("1 - Проверка готовых машин");
-            System.out.println("2 - Проверить свою машину");
-            System.out.println("3 - Моделирование очереди");
-            System.out.println("0 - Выход");
-            System.out.print("Выбор: ");
-            choice = ReadInt();
-
-            if (choice == 1) {
-                Demo();
-            } else if (choice == 2) {
-                UserCar();
-            } else if (choice == 3) {
-                Modeling();
-            } else if (choice != 0) {
-                System.out.println("Нет такого пункта");
-            }
-        }
-        System.out.println("Bye!");
-    }
-
-    static void Demo() {
-        // Vehicle v = new Vehicle(); - can't, class is abstract
-        Vehicle[] cars = new Vehicle[10];
-        cars[0] = new Car("А123ВС", 4.5, 1.8, 1.5, 1.6, 50, Vehicle.SAFE);
-        cars[1] = new Car("В777ОР", 4.8, 1.9, 1.6, 2.0, 75, Vehicle.SAFE);         // too fast
-        cars[2] = new Car("Е001КХ", 4.9, 1.9, 1.7, 2.2, 15, Vehicle.FIRE);         // bad cargo
-        cars[3] = new Truck("К555МН", 10.0, 2.5, 3.8, 20.0, 35, Vehicle.SAFE);
-        cars[4] = new Truck("М404ТТ", 11.0, 2.5, 3.9, 30.0, 15, Vehicle.CHEMICAL); // too heavy
-        cars[5] = new Bus("Н321АА", 12.0, 2.5, 3.5, 15.0, 30, Vehicle.SAFE);
-        cars[6] = new Bus("О999СС", 12.0, 2.5, 3.5, 15.0, 15, Vehicle.FIRE);       // bad cargo
-        cars[7] = new Trailer("Р100ХУ", 16.5, 2.55, 4.0, 40.0, 10, Vehicle.BOOM);
-        cars[8] = new Trailer("С200УК", 16.5, 2.55, 4.3, 40.0, 25, Vehicle.BOOM);  // high + fast
-        cars[9] = new CarWithTrailer("Т300ЕЕ", 8.0, 2.0, 2.5, 3.0, 30, Vehicle.SAFE);
-
-        for (int i = 0; i < cars.length; i++) {
-            System.out.println(cars[i]);
-            Check(cars[i]);
-        }
-    }
-
-    // Pass() of real class is called (Car, Bus...) - polymorphism
-    static void Check(Vehicle v) {
-        if (v.Pass()) {
-            System.out.println("   ПРОПУЩЕН, контроль " + v.GetCheckTime() + " мин");
-        } else {
-            System.out.println("   НЕ ПРОПУЩЕН: " + v.GetReason());
-        }
-    }
-
-    static void UserCar() {
-        System.out.println("Тип: 1-легковая 2-грузовик 3-автобус 4-трейлер 5-с прицепом");
-        int type = ReadInt();
-        System.out.print("Номер: ");
-        String num = in.next();
-        System.out.print("Длина: ");
-        double l = ReadDouble();
-        System.out.print("Ширина: ");
-        double w = ReadDouble();
-        System.out.print("Высота: ");
-        double h = ReadDouble();
-        System.out.print("Масса (т): ");
-        double m = ReadDouble();
-        System.out.print("Скорость: ");
-        int s = ReadInt();
-        System.out.println("Груз: 1-безопасный 2-огнеопасный 3-хим. опасный 4-взрывоопасный 5-особой важности");
-        int c = ReadInt();
-        String cargo = Vehicle.CARGO[c - 1];
-
-        Vehicle v;
-        if (type == 1) v = new Car(num, l, w, h, m, s, cargo);
-        else if (type == 2) v = new Truck(num, l, w, h, m, s, cargo);
-        else if (type == 3) v = new Bus(num, l, w, h, m, s, cargo);
-        else if (type == 4) v = new Trailer(num, l, w, h, m, s, cargo);
-        else v = new CarWithTrailer(num, l, w, h, m, s, cargo);
-
-        System.out.println(v);
-        Check(v);
-    }
-
-    static void Modeling() {
-        System.out.println("Поток: 1-слабый 2-средний 3-сильный 4-свой");
-        int f = ReadInt();
-        int min = 4, max = 8; // slow by default
-        if (f == 2) {
-            min = 1;
-            max = 4;
-        } else if (f == 3) {
-            min = 0;
-            max = 2;
-        } else if (f == 4) {
-            System.out.print("Мин. интервал между машинами: ");
-            min = ReadInt();
-            System.out.print("Макс. интервал между машинами: ");
-            max = ReadInt();
-            if (min > max) { // mixed up
-                int t = min;
-                min = max;
-                max = t;
-            }
-            if (min < 0) min = 0; // negative = endless loop
-            if (max < 1) max = 1; // 0 and 0 = endless loop too
-        }
-        System.out.print("Сколько минут: ");
-        int time = ReadInt();
-
-        Simulation sim = new Simulation(min, max, time);
-        sim.Run();
-    }
-
-    static int ReadInt() {
-        return Integer.parseInt(in.next());
-    }
-
-    // russian windows writes 3,5 not 3.5
-    static double ReadDouble() {
-        return Double.parseDouble(in.next().replace(',', '.'));
+        ConsoleView view = new ConsoleView();
+        Controller controller = new Controller(view);
+        controller.Start();
     }
 }
 
+
+// ======================= MODEL =======================
 
 // Транспортное средство (абстрактный класс)
 abstract class Vehicle {
@@ -163,29 +51,16 @@ abstract class Vehicle {
         this.cargo = cargo;
     }
 
-    public String GetNumber() {
-        return number;
-    }
-
-    public int GetSpeed() {
-        return speed;
-    }
-
-    public String GetCargo() {
-        return cargo;
-    }
-
-    public String GetReason() {
-        return reason;
-    }
-
-    public int GetArriveTime() {
-        return arriveTime;
-    }
-
-    public void SetArriveTime(int arriveTime) {
-        this.arriveTime = arriveTime;
-    }
+    public String GetNumber() { return number; }
+    public double GetLength() { return length; }
+    public double GetWidth() { return width; }
+    public double GetHeight() { return height; }
+    public double GetWeight() { return weight; }
+    public int GetSpeed() { return speed; }
+    public String GetCargo() { return cargo; }
+    public String GetReason() { return reason; }
+    public int GetArriveTime() { return arriveTime; }
+    public void SetArriveTime(int arriveTime) { this.arriveTime = arriveTime; }
 
     // every type has own limits
     public abstract String GetType();
@@ -458,13 +333,47 @@ class Generator {
 }
 
 
+// событие моделирования (what happened at some minute)
+// model does not print, it only says what happened
+class Event {
+    public static final int ARRIVED = 1;
+    public static final int PASSED = 2;
+    public static final int REJECTED = 3;
+    public static final int OPENED = 4;
+    public static final int CLOSED = 5;
+
+    private int minute;
+    private int type;
+    private Vehicle car;   // can be null (for open / close)
+    private int post;      // post number, 0 if no post
+    private int queueSize;
+
+    public Event(int minute, int type, Vehicle car, int post, int queueSize) {
+        this.minute = minute;
+        this.type = type;
+        this.car = car;
+        this.post = post;
+        this.queueSize = queueSize;
+    }
+
+    public int GetMinute() { return minute; }
+    public int GetType() { return type; }
+    public Vehicle GetCar() { return car; }
+    public int GetPost() { return post; }
+    public int GetQueueSize() { return queueSize; }
+}
+
+
 // моделирование: пост 1 работает всегда,
 // пост 2 и 3 открываются если ждать больше 10 минут
 class Simulation {
+    public static final int MAX_WAIT = 10;
+
     private CheckPoint[] posts = new CheckPoint[3];
     private ArrayList<Vehicle> queue = new ArrayList<Vehicle>();
     private Generator gen;
-    private int time;
+    private int time;   // minutes when new cars come
+    private int t = 0;  // current minute
 
     private int all = 0, passed = 0, notPassed = 0;
     private int maxQueue = 0, waitSum = 0, maxWait = 0;
@@ -501,80 +410,299 @@ class Simulation {
         return true;
     }
 
-    public void Run() {
-        int t = 0;
-        while (t < time || queue.size() > 0 || !AllFree()) {
-            // 1. new cars
-            if (t < time) {
-                ArrayList<Vehicle> newCars = gen.NewCars(t);
-                for (int i = 0; i < newCars.size(); i++) {
-                    Vehicle v = newCars.get(i);
-                    v.SetArriveTime(t);
-                    queue.add(v);
-                    all++;
-                    System.out.println(t + " мин: приехал " + v);
-                }
-            }
+    // time is over and everybody is checked
+    public boolean IsFinished() {
+        return t >= time && queue.size() == 0 && AllFree();
+    }
 
-            // 2. posts work
-            for (int i = 0; i < 3; i++) {
-                Vehicle v = posts[i].Work();
-                if (v != null) {
-                    if (v.Pass()) {
-                        passed++;
-                        System.out.println(t + " мин: пост " + (i + 1) + " ПРОПУСТИЛ " + v.GetType() + " " + v.GetNumber());
-                    } else {
-                        notPassed++;
-                        System.out.println(t + " мин: пост " + (i + 1) + " НЕ ПРОПУСТИЛ " + v.GetType() + " " + v.GetNumber() + " (" + v.GetReason() + ")");
-                    }
-                }
-            }
+    // one minute of work, returns what happened
+    public ArrayList<Event> Step() {
+        ArrayList<Event> events = new ArrayList<Event>();
 
-            // 3. open new post if wait > 10 min
-            if (WaitTime() > 10) {
-                for (int i = 1; i < 3; i++) {
-                    if (!posts[i].IsOpen()) {
-                        posts[i].SetOpen(true);
-                        System.out.println(t + " мин: >>> ОТКРЫТ пост " + (i + 1) + ", в очереди " + queue.size());
-                        break;
-                    }
-                }
+        // 1. new cars
+        if (t < time) {
+            ArrayList<Vehicle> newCars = gen.NewCars(t);
+            for (int i = 0; i < newCars.size(); i++) {
+                Vehicle v = newCars.get(i);
+                v.SetArriveTime(t);
+                queue.add(v);
+                all++;
+                events.add(new Event(t, Event.ARRIVED, v, 0, queue.size()));
             }
-            // close extra posts if no queue
-            if (queue.size() == 0) {
-                for (int i = 1; i < 3; i++) {
-                    if (posts[i].IsOpen() && posts[i].IsFree()) {
-                        posts[i].SetOpen(false);
-                        System.out.println(t + " мин: <<< ЗАКРЫТ пост " + (i + 1));
-                    }
-                }
-            }
-
-            // 4. free posts take next car
-            for (int i = 0; i < 3; i++) {
-                if (posts[i].IsOpen() && posts[i].IsFree() && queue.size() > 0) {
-                    Vehicle v = queue.remove(0);
-                    int wait = t - v.GetArriveTime();
-                    waitSum += wait;
-                    if (wait > maxWait) maxWait = wait;
-                    posts[i].Take(v);
-                }
-            }
-
-            if (queue.size() > maxQueue) maxQueue = queue.size();
-            t++;
         }
 
+        // 2. posts work
+        for (int i = 0; i < 3; i++) {
+            Vehicle v = posts[i].Work();
+            if (v != null) {
+                if (v.Pass()) {
+                    passed++;
+                    events.add(new Event(t, Event.PASSED, v, i + 1, queue.size()));
+                } else {
+                    notPassed++;
+                    events.add(new Event(t, Event.REJECTED, v, i + 1, queue.size()));
+                }
+            }
+        }
+
+        // 3. open new post if wait > 10 min
+        if (WaitTime() > MAX_WAIT) {
+            for (int i = 1; i < 3; i++) {
+                if (!posts[i].IsOpen()) {
+                    posts[i].SetOpen(true);
+                    events.add(new Event(t, Event.OPENED, null, i + 1, queue.size()));
+                    break;
+                }
+            }
+        }
+        // close extra posts if no queue
+        if (queue.size() == 0) {
+            for (int i = 1; i < 3; i++) {
+                if (posts[i].IsOpen() && posts[i].IsFree()) {
+                    posts[i].SetOpen(false);
+                    events.add(new Event(t, Event.CLOSED, null, i + 1, 0));
+                }
+            }
+        }
+
+        // 4. free posts take next car
+        for (int i = 0; i < 3; i++) {
+            if (posts[i].IsOpen() && posts[i].IsFree() && queue.size() > 0) {
+                Vehicle v = queue.remove(0);
+                int wait = t - v.GetArriveTime();
+                waitSum += wait;
+                if (wait > maxWait) maxWait = wait;
+                posts[i].Take(v);
+            }
+        }
+
+        if (queue.size() > maxQueue) maxQueue = queue.size();
+        t++;
+        return events;
+    }
+
+    // statistics for the view
+    public int GetMinutes() { return t; }
+    public int GetAll() { return all; }
+    public int GetPassed() { return passed; }
+    public int GetNotPassed() { return notPassed; }
+    public int GetMaxQueue() { return maxQueue; }
+    public int GetMaxWait() { return maxWait; }
+    public double GetAverageWait() {
+        if (all == 0) return 0;
+        return Math.round(waitSum * 10.0 / all) / 10.0;
+    }
+    public int GetPostCount(int i) { return posts[i].GetCount(); }
+}
+
+
+// ======================= VIEW =======================
+// только ввод и вывод, no logic here
+
+class ConsoleView {
+    private Scanner in = new Scanner(System.in);
+
+    public void ShowMenu() {
+        System.out.println();
+        System.out.println("===== ПУНКТ ПРОПУСКА =====");
+        System.out.println("1 - Проверка готовых машин");
+        System.out.println("2 - Проверить свою машину");
+        System.out.println("3 - Моделирование очереди");
+        System.out.println("0 - Выход");
+    }
+
+    public void ShowMessage(String text) {
+        System.out.println(text);
+    }
+
+    public void ShowVehicle(Vehicle v) {
+        System.out.println(v);
+    }
+
+    public void ShowCheckResult(Vehicle v, boolean ok) {
+        if (ok) {
+            System.out.println("   ПРОПУЩЕН, контроль " + v.GetCheckTime() + " мин");
+        } else {
+            System.out.println("   НЕ ПРОПУЩЕН: " + v.GetReason());
+        }
+    }
+
+    public void ShowEvent(Event e) {
+        String s = e.GetMinute() + " мин: ";
+        if (e.GetType() == Event.ARRIVED) {
+            s += "приехал " + e.GetCar();
+        } else if (e.GetType() == Event.PASSED) {
+            s += "пост " + e.GetPost() + " ПРОПУСТИЛ " + e.GetCar().GetType() + " " + e.GetCar().GetNumber();
+        } else if (e.GetType() == Event.REJECTED) {
+            s += "пост " + e.GetPost() + " НЕ ПРОПУСТИЛ " + e.GetCar().GetType() + " "
+                    + e.GetCar().GetNumber() + " (" + e.GetCar().GetReason() + ")";
+        } else if (e.GetType() == Event.OPENED) {
+            s += ">>> ОТКРЫТ пост " + e.GetPost() + ", в очереди " + e.GetQueueSize();
+        } else if (e.GetType() == Event.CLOSED) {
+            s += "<<< ЗАКРЫТ пост " + e.GetPost();
+        }
+        System.out.println(s);
+    }
+
+    public void ShowStats(Simulation sim) {
         System.out.println();
         System.out.println("===== ИТОГ =====");
-        System.out.println("Всего машин: " + all);
-        System.out.println("Пропущено: " + passed);
-        System.out.println("Не пропущено: " + notPassed);
-        System.out.println("Макс. очередь: " + maxQueue);
-        if (all > 0) System.out.println("Среднее ожидание: " + Math.round(waitSum * 10.0 / all) / 10.0 + " мин");
-        System.out.println("Макс. ожидание: " + maxWait + " мин");
+        System.out.println("Время работы: " + sim.GetMinutes() + " мин");
+        System.out.println("Всего машин: " + sim.GetAll());
+        System.out.println("Пропущено: " + sim.GetPassed());
+        System.out.println("Не пропущено: " + sim.GetNotPassed());
+        System.out.println("Макс. очередь: " + sim.GetMaxQueue());
+        System.out.println("Среднее ожидание: " + sim.GetAverageWait() + " мин");
+        System.out.println("Макс. ожидание: " + sim.GetMaxWait() + " мин");
         for (int i = 0; i < 3; i++) {
-            System.out.println("Пост " + (i + 1) + " проверил " + posts[i].GetCount() + " машин");
+            System.out.println("Пост " + (i + 1) + " проверил " + sim.GetPostCount(i) + " машин");
         }
+    }
+
+    public String ReadString(String text) {
+        System.out.print(text);
+        return in.next();
+    }
+
+    // read number, if not number - ask again
+    public int ReadInt(String text) {
+        System.out.print(text);
+        while (true) {
+            String s = in.next();
+            try {
+                return Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                System.out.print("Ошибка, введите целое число: ");
+            }
+        }
+    }
+
+    // russian windows writes 3,5 not 3.5
+    public double ReadDouble(String text) {
+        System.out.print(text);
+        while (true) {
+            String s = in.next().replace(',', '.');
+            try {
+                return Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                System.out.print("Ошибка, введите число: ");
+            }
+        }
+    }
+}
+
+
+// ======================= CONTROLLER =======================
+// gets commands from view, works with model, gives result to view
+
+class Controller {
+    private ConsoleView view;
+
+    public Controller(ConsoleView view) {
+        this.view = view;
+    }
+
+    public void Start() {
+        int choice = -1;
+        while (choice != 0) {
+            view.ShowMenu();
+            choice = view.ReadInt("Выбор: ");
+
+            if (choice == 1) {
+                Demo();
+            } else if (choice == 2) {
+                UserCar();
+            } else if (choice == 3) {
+                Modeling();
+            } else if (choice != 0) {
+                view.ShowMessage("Нет такого пункта");
+            }
+        }
+        view.ShowMessage("Bye!");
+    }
+
+    // Pass() of real class is called (Car, Bus...) - polymorphism
+    private void Check(Vehicle v) {
+        view.ShowVehicle(v);
+        boolean ok = v.Pass();
+        view.ShowCheckResult(v, ok);
+    }
+
+    private void Demo() {
+        // Vehicle v = new Vehicle(); - can't, class is abstract
+        Vehicle[] cars = new Vehicle[10];
+        cars[0] = new Car("А123ВС", 4.5, 1.8, 1.5, 1.6, 50, Vehicle.SAFE);
+        cars[1] = new Car("В777ОР", 4.8, 1.9, 1.6, 2.0, 75, Vehicle.SAFE);         // too fast
+        cars[2] = new Car("Е001КХ", 4.9, 1.9, 1.7, 2.2, 15, Vehicle.FIRE);         // bad cargo
+        cars[3] = new Truck("К555МН", 10.0, 2.5, 3.8, 20.0, 35, Vehicle.SAFE);
+        cars[4] = new Truck("М404ТТ", 11.0, 2.5, 3.9, 30.0, 15, Vehicle.CHEMICAL); // too heavy
+        cars[5] = new Bus("Н321АА", 12.0, 2.5, 3.5, 15.0, 30, Vehicle.SAFE);
+        cars[6] = new Bus("О999СС", 12.0, 2.5, 3.5, 15.0, 15, Vehicle.FIRE);       // bad cargo
+        cars[7] = new Trailer("Р100ХУ", 16.5, 2.55, 4.0, 40.0, 10, Vehicle.BOOM);
+        cars[8] = new Trailer("С200УК", 16.5, 2.55, 4.3, 40.0, 25, Vehicle.BOOM);  // high + fast
+        cars[9] = new CarWithTrailer("Т300ЕЕ", 8.0, 2.0, 2.5, 3.0, 30, Vehicle.SAFE);
+
+        for (int i = 0; i < cars.length; i++) {
+            Check(cars[i]);
+        }
+    }
+
+    private void UserCar() {
+        view.ShowMessage("Тип: 1-легковая 2-грузовик 3-автобус 4-трейлер 5-с прицепом");
+        int type = view.ReadInt("Тип: ");
+        String num = view.ReadString("Номер: ");
+        double l = view.ReadDouble("Длина: ");
+        double w = view.ReadDouble("Ширина: ");
+        double h = view.ReadDouble("Высота: ");
+        double m = view.ReadDouble("Масса (т): ");
+        int s = view.ReadInt("Скорость: ");
+        view.ShowMessage("Груз: 1-безопасный 2-огнеопасный 3-хим. опасный 4-взрывоопасный 5-особой важности");
+        int c = view.ReadInt("Груз: ");
+        while (c < 1 || c > 5) {
+            c = view.ReadInt("Нужно от 1 до 5: ");
+        }
+        String cargo = Vehicle.CARGO[c - 1];
+
+        Vehicle v;
+        if (type == 1) v = new Car(num, l, w, h, m, s, cargo);
+        else if (type == 2) v = new Truck(num, l, w, h, m, s, cargo);
+        else if (type == 3) v = new Bus(num, l, w, h, m, s, cargo);
+        else if (type == 4) v = new Trailer(num, l, w, h, m, s, cargo);
+        else v = new CarWithTrailer(num, l, w, h, m, s, cargo);
+
+        Check(v);
+    }
+
+    private void Modeling() {
+        view.ShowMessage("Поток: 1-слабый 2-средний 3-сильный 4-свой");
+        int f = view.ReadInt("Поток: ");
+        int min = 4, max = 8; // slow by default
+        if (f == 2) {
+            min = 1;
+            max = 4;
+        } else if (f == 3) {
+            min = 0;
+            max = 2;
+        } else if (f == 4) {
+            min = view.ReadInt("Мин. интервал между машинами: ");
+            max = view.ReadInt("Макс. интервал между машинами: ");
+            if (min > max) { // mixed up
+                int t = min;
+                min = max;
+                max = t;
+            }
+            if (min < 0) min = 0; // negative = endless loop
+            if (max < 1) max = 1; // 0 and 0 = endless loop too
+        }
+        int time = view.ReadInt("Сколько минут: ");
+
+        Simulation sim = new Simulation(min, max, time);
+        while (!sim.IsFinished()) {
+            ArrayList<Event> events = sim.Step();
+            for (int i = 0; i < events.size(); i++) {
+                view.ShowEvent(events.get(i));
+            }
+        }
+        view.ShowStats(sim);
     }
 }
