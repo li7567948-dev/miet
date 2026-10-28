@@ -1,0 +1,38 @@
+name: Lab 1 C++ verification
+on:
+  push:
+    paths:
+      - 'Algorithms/Lab1/lab1_all.cpp'
+      - '.github/workflows/lab1-cpp.yml'
+  workflow_dispatch:
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile with C++17 and warnings
+        run: g++ -std=c++17 -O2 -Wall -Wextra -pedantic Algorithms/Lab1/lab1_all.cpp -o lab1
+      - name: Run all four algorithms
+        run: |
+          printf '5\n0\n' | ./lab1 > lab1-output.txt
+          cat lab1-output.txt
+          grep -q 'SORT variant 3' lab1-output.txt
+          grep -q 'SORT variant 8' lab1-output.txt
+          grep -q 'POISK variant 3' lab1-output.txt
+          grep -q 'POISK variant 8' lab1-output.txt
+          test "$(grep -c 'sorted=YES' lab1-output.txt)" -eq 18
+          test "$(grep -c 'correct=YES' lab1-output.txt)" -eq 12
+          test -s sort_variant3.csv
+          test -s sort_variant8.csv
+          test -s poisk_variant3.csv
+          test -s poisk_variant8.csv
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: lab1-test-results
+          path: |
+            lab1-output.txt
+            sort_variant3.csv
+            sort_variant8.csv
+            poisk_variant3.csv
+            poisk_variant8.csv
