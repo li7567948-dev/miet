@@ -12,25 +12,33 @@
 using namespace std;
 using Clock = chrono::steady_clock;
 
-void shellSort(vector<int>& a) {
+struct SortStats { unsigned long long comparisons = 0, moves = 0; };
+void shellSort(vector<int>& a, SortStats& stats) {
     for (int gap = (int)a.size() / 2; gap > 0; gap /= 2)
         for (int i = gap; i < (int)a.size(); ++i) {
             int value = a[i], j = i;
-            while (j >= gap && a[j-gap] > value) {
+            ++stats.moves;
+            while (j >= gap) {
+                ++stats.comparisons;
+                if (a[j-gap] <= value) break;
                 a[j] = a[j-gap];
+                ++stats.moves;
                 j -= gap;
             }
             a[j] = value;
+            ++stats.moves;
         }
 }
-void insertionSort(vector<int>& a) {
+void insertionSort(vector<int>& a, SortStats& stats) {
     for (int i = 1; i < (int)a.size(); ++i) {
         int value = a[i], j = i;
         while (j > 0 && a[j-1] > value) {
             a[j] = a[j-1];
+            ++stats.moves;
             --j;
         }
         a[j] = value;
+        ++stats.moves;
     }
 }
 vector<int> makeData(int n, unsigned seed) {
@@ -71,27 +79,31 @@ void runSort(int variant) {
     vector<int> sizes = variant == 3 ? vector<int>{2000,5000,6800} : vector<int>{1200,2000,7500};
     string filename = "sort_variant" + to_string(variant) + ".csv";
     ofstream csv(filename);
-    csv << "variant,size,case,trial,time_us,correct\n";
+    csv << "variant,size,case,trial,time_us,comparisons,moves,correct\n";
     cout << "\nSORT variant " << variant << " (5 trials per case)\n";
     for (int n : sizes) for (int kind = 0; kind < 3; ++kind) {
         string label = kind == 0 ? "random" : kind == 1 ? "ascending" : "descending";
         double sum = 0;
+        unsigned long long totalComparisons = 0, totalMoves = 0;
         for (int trial = 1; trial <= 5; ++trial) {
             vector<int> a = makeData(n, 2026u + (unsigned)n + (unsigned)trial);
             if (kind != 0) {
                 sort(a.begin(), a.end());
                 if (kind == 2) reverse(a.begin(), a.end());
             }
+            SortStats stats;
             auto start = Clock::now();
-            if (variant == 3) shellSort(a); else insertionSort(a);
+            if (variant == 3) shellSort(a, stats); else insertionSort(a, stats);
             auto stop = Clock::now();
             double us = chrono::duration<double, micro>(stop-start).count();
             bool ok = is_sorted(a.begin(), a.end());
-            csv << variant << ',' << n << ',' << label << ',' << trial << ',' << fixed << setprecision(3) << us << ',' << (ok ? "YES" : "NO") << '\n';
+            csv << variant << ',' << n << ',' << label << ',' << trial << ',' << fixed << setprecision(3) << us << ',' << stats.comparisons << ',' << stats.moves << ',' << (ok ? "YES" : "NO") << '\n';
             sum += us;
+            totalComparisons += stats.comparisons;
+            totalMoves += stats.moves;
             if (!ok) { cerr << "SORT ERROR\n"; return; }
         }
-        cout << "N=" << n << " " << setw(10) << label << " average=" << fixed << setprecision(2) << sum/5 << " us  sorted=YES\n";
+        cout << "N=" << n << " " << setw(10) << label << " average=" << fixed << setprecision(2) << sum/5 << " us  avg comparisons=" << totalComparisons/5 << " avg moves=" << totalMoves/5 << " sorted=YES\n";
     }
     cout << "Saved " << filename << "\n";
 }
