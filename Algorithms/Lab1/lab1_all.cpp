@@ -32,7 +32,10 @@ void shellSort(vector<int>& a, SortStats& stats) {
 void insertionSort(vector<int>& a, SortStats& stats) {
     for (int i = 1; i < (int)a.size(); ++i) {
         int value = a[i], j = i;
-        while (j > 0 && a[j-1] > value) {
+        ++stats.moves;
+        while (j > 0) {
+            ++stats.comparisons;
+            if (a[j-1] <= value) break;
             a[j] = a[j-1];
             ++stats.moves;
             --j;
