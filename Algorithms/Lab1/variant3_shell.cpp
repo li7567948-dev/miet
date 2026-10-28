@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <chrono>
+#include <cstdint>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -7,106 +8,116 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-using namespace std;
-struct Stats { unsigned long long comparisons=0, moves=0; };
-using Sort = void(*)(vector<int>&,Stats&);
-void insertion(vector<int>& a,Stats& s) {
- for(size_t i=1;i<a.size();++i){int x=a[i];++s.moves;size_t j=i;
-  while(j>0){++s.comparisons;if(a[j-1]<=x)break;a[j]=a[j-1];++s.moves;--j;}
-  a[j]=x;++s.moves;
+struct Statistics { std::uint64_t comparisons=0, moves=0; };
+using Algorithm=void(*)(std::vector<int>&,Statistics&);
+void insertionSort(std::vector<int>& a,Statistics& s){
+ for(std::size_t i=1;i<a.size();++i){int key=a[i];++s.moves;std::size_t j=i;
+  while(j>0){++s.comparisons;if(a[j-1]<=key)break;a[j]=a[j-1];++s.moves;--j;}
+  a[j]=key;++s.moves;
  }
 }
-void shell(vector<int>& a,Stats& s) {
- for(size_t gap=a.size()/2;gap>0;gap/=2)
-  for(size_t i=gap;i<a.size();++i){int x=a[i];++s.moves;size_t j=i;
-   while(j>=gap){++s.comparisons;if(a[j-gap]<=x)break;a[j]=a[j-gap];++s.moves;j-=gap;}
-   a[j]=x;++s.moves;
+void shellSort(std::vector<int>& a,Statistics& s){
+ for(std::size_t gap=a.size()/2;gap>0;gap/=2)
+  for(std::size_t i=gap;i<a.size();++i){int key=a[i];++s.moves;std::size_t j=i;
+   while(j>=gap){++s.comparisons;if(a[j-gap]<=key)break;a[j]=a[j-gap];++s.moves;j-=gap;}
+   a[j]=key;++s.moves;
   }
 }
-void selection(vector<int>& a,Stats& s) {
- for(size_t i=0;i<a.size();++i){size_t m=i;for(size_t j=i+1;j<a.size();++j){++s.comparisons;if(a[j]<a[m])m=j;}
-  if(m!=i){swap(a[i],a[m]);s.moves+=3;}
+void selectionSort(std::vector<int>& a,Statistics& s){
+ for(std::size_t i=0;i<a.size();++i){std::size_t m=i;
+  for(std::size_t j=i+1;j<a.size();++j){++s.comparisons;if(a[j]<a[m])m=j;}
+  if(m!=i){std::swap(a[i],a[m]);s.moves+=3;}
  }
 }
-void shaker(vector<int>& a,Stats& s) {
- if(a.empty())return;size_t left=0,right=a.size()-1;
- while(left<right){bool changed=false;
-  for(size_t i=left;i<right;++i){++s.comparisons;if(a[i]>a[i+1]){swap(a[i],a[i+1]);s.moves+=3;changed=true;}}
-  if(!changed)break;--right;changed=false;
-  for(size_t i=right;i>left;--i){++s.comparisons;if(a[i-1]>a[i]){swap(a[i-1],a[i]);s.moves+=3;changed=true;}}
-  ++left;if(!changed)break;
+void binaryInsertionSort(std::vector<int>& a,Statistics& s){
+ for(std::size_t i=1;i<a.size();++i){int key=a[i];++s.moves;std::size_t lo=0,hi=i;
+  while(lo<hi){std::size_t mid=lo+(hi-lo)/2;++s.comparisons;if(a[mid]<=key)lo=mid+1;else hi=mid;}
+  for(std::size_t j=i;j>lo;--j){a[j]=a[j-1];++s.moves;}a[lo]=key;++s.moves;
  }
 }
-void binaryInsertion(vector<int>& a,Stats& s) {
- for(size_t i=1;i<a.size();++i){int x=a[i];++s.moves;size_t l=0,r=i;
-  while(l<r){size_t m=l+(r-l)/2;++s.comparisons;if(a[m]<=x)l=m+1;else r=m;}
-  for(size_t j=i;j>l;--j){a[j]=a[j-1];++s.moves;}a[l]=x;++s.moves;
+void shakerSort(std::vector<int>& a,Statistics& s){
+ if(a.size()<2)return;std::size_t left=0,right=a.size()-1;
+ while(left<right){bool swapped=false;
+  for(std::size_t i=left;i<right;++i){++s.comparisons;if(a[i]>a[i+1]){std::swap(a[i],a[i+1]);s.moves+=3;swapped=true;}}
+  if(!swapped)break;--right;swapped=false;
+  for(std::size_t i=right;i>left;--i){++s.comparisons;if(a[i-1]>a[i]){std::swap(a[i-1],a[i]);s.moves+=3;swapped=true;}}
+  ++left;if(!swapped)break;
  }
 }
-void mergeRange(vector<int>& a,vector<int>& tmp,size_t l,size_t r,Stats& s){
- if(r-l<2)return;size_t m=l+(r-l)/2;mergeRange(a,tmp,l,m,s);mergeRange(a,tmp,m,r,s);
- size_t i=l,j=m,k=l;
- while(i<m&&j<r){++s.comparisons;tmp[k++]=(a[i]<=a[j]?a[i++]:a[j++]);++s.moves;}
- while(i<m){tmp[k++]=a[i++];++s.moves;}while(j<r){tmp[k++]=a[j++];++s.moves;}
- for(size_t p=l;p<r;++p){a[p]=tmp[p];++s.moves;}
+void mergeRange(std::vector<int>& a,std::vector<int>& t,std::size_t l,std::size_t r,Statistics& s){
+ if(r-l<2)return;std::size_t m=l+(r-l)/2;
+ mergeRange(a,t,l,m,s);mergeRange(a,t,m,r,s);
+ std::size_t i=l,j=m,k=l;
+ while(i<m&&j<r){++s.comparisons;t[k++]=(a[i]<=a[j]?a[i++]:a[j++]);++s.moves;}
+ while(i<m){t[k++]=a[i++];++s.moves;}while(j<r){t[k++]=a[j++];++s.moves;}
+ for(std::size_t p=l;p<r;++p){a[p]=t[p];++s.moves;}
 }
-void mergeSort(vector<int>& a,Stats& s){vector<int> tmp(a.size());mergeRange(a,tmp,0,a.size(),s);}
-void quickRange(vector<int>& a,int l,int r,Stats& s){
+void mergeSort(std::vector<int>& a,Statistics& s){std::vector<int> t(a.size());mergeRange(a,t,0,a.size(),s);}
+void quickRange(std::vector<int>& a,int l,int r,Statistics& s){
  while(l<r){int i=l,j=r,pivot=a[l+(r-l)/2];
-  while(i<=j){while(true){++s.comparisons;if(!(a[i]<pivot))break;++i;}
+  while(i<=j){
+   while(true){++s.comparisons;if(!(a[i]<pivot))break;++i;}
    while(true){++s.comparisons;if(!(a[j]>pivot))break;--j;}
-   if(i<=j){if(i!=j){swap(a[i],a[j]);s.moves+=3;}++i;--j;}
+   if(i<=j){if(i!=j){std::swap(a[i],a[j]);s.moves+=3;}++i;--j;}
   }
   if(j-l<r-i){if(l<j)quickRange(a,l,j,s);l=i;}
   else{if(i<r)quickRange(a,i,r,s);r=j;}
  }
 }
-void quickSort(vector<int>& a,Stats& s){if(!a.empty())quickRange(a,0,(int)a.size()-1,s);}
-struct Method { const char* name; Sort run; };
-const vector<Method> methods={
- {"Insertion",insertion},{"Merge",mergeSort},{"Shell",shell},
- {"Selection",selection},{"Quick",quickSort},{"BinaryInsertion",binaryInsertion},{"Shaker",shaker}
-};
-vector<int> makeData(int n,int kind,unsigned seed){
- vector<int> a(n);mt19937 gen(seed);uniform_int_distribution<int> dist(-100000,100000);
- for(int& x:a)x=dist(gen);
- if(kind==1)sort(a.begin(),a.end());
- if(kind==2)sort(a.rbegin(),a.rend());
+void quickSort(std::vector<int>& a,Statistics& s){if(!a.empty())quickRange(a,0,static_cast<int>(a.size())-1,s);}
+struct Method {const char* name;Algorithm function;};
+const std::vector<Method>& allMethods(){
+ static const std::vector<Method> methods={
+  {"Insertion",insertionSort},{"Merge",mergeSort},{"Shell",shellSort},
+  {"Selection",selectionSort},{"Quick",quickSort},
+  {"BinaryInsertion",binaryInsertionSort},{"Shaker",shakerSort}};
+ return methods;
+}
+void verifyAlgorithms(){
+ const std::vector<std::vector<int>> cases={{},{7},{2,1},{5,5,5},{4,-1,4,2,0,-1},{1,2,3,4,5},{5,4,3,2,1}};
+ for(const auto& method:allMethods())for(const auto& sample:cases){
+  auto data=sample,expected=sample;std::sort(expected.begin(),expected.end());Statistics s;
+  method.function(data,s);
+  if(data!=expected)throw std::runtime_error(std::string("Test failed: ")+method.name);
+ }
+}
+std::vector<int> makeInput(int n,int order,unsigned seed){
+ std::vector<int> a(static_cast<std::size_t>(n));std::mt19937 rng(seed);
+ std::uniform_int_distribution<int> dist(-100000,100000);
+ for(int& value:a)value=dist(rng);
+ if(order==1)std::sort(a.begin(),a.end());
+ if(order==2)std::sort(a.rbegin(),a.rend());
  return a;
 }
-void selfTest(){
- vector<vector<int>> tests={{},{5},{2,1},{3,1,2,1,3},{-3,0,-3,9,2}};
- for(const auto& method:methods)for(auto sample:tests){
-  auto expected=sample;sort(expected.begin(),expected.end());Stats s;method.run(sample,s);
-  if(sample!=expected)throw runtime_error(string("Self-test failed: ")+method.name);
- }
-}
-void experiment(int variant,const vector<int>& sizes,const string& csv){
- selfTest();ofstream out(csv);
- if(!out)throw runtime_error("Cannot open CSV output");
- out<<"variant,method,initial_order,N,time_ms,comparisons,moves,correct\n";
+void runExperiment(int variant,const std::vector<int>& sizes,const std::string& outputName){
+ verifyAlgorithms();std::ofstream csv(outputName);
+ if(!csv)throw std::runtime_error("Cannot create results CSV");
+ csv<<"variant,method,input_order,N,time_ms,comparisons,moves,correct\n";
  const char* orders[]={"random","sorted","reverse"};
- cout<<"Variant "<<variant<<" / Вариант "<<variant<<"\n";
- for(int n:sizes)for(int kind=0;kind<3;++kind){
-  const auto original=makeData(n,kind,2026u+(unsigned)n);
-  auto expected=original;sort(expected.begin(),expected.end());
-  for(const auto& method:methods){
-   auto data=original;Stats s;
-   const auto start=chrono::steady_clock::now();
-   method.run(data,s);
-   const auto finish=chrono::steady_clock::now();
-   bool correct=(data==expected);
-   double ms=chrono::duration<double,milli>(finish-start).count();
-   out<<variant<<','<<method.name<<','<<orders[kind]<<','<<n<<','
-      <<fixed<<setprecision(6)<<ms<<','<<s.comparisons<<','<<s.moves<<','
+ std::cout<<"Lab 1 / Part 1 / Variant "<<variant<<"\n";
+ for(int n:sizes)for(int order=0;order<3;++order){
+  const auto source=makeInput(n,order,2026u+static_cast<unsigned>(n));
+  auto expected=source;std::sort(expected.begin(),expected.end());
+  for(const auto& method:allMethods()){
+   auto data=source;Statistics stats;
+   const auto start=std::chrono::steady_clock::now();
+   method.function(data,stats);
+   const auto finish=std::chrono::steady_clock::now();
+   const bool correct=(data==expected);
+   const double elapsed=std::chrono::duration<double,std::milli>(finish-start).count();
+   csv<<variant<<','<<method.name<<','<<orders[order]<<','<<n<<','
+      <<std::fixed<<std::setprecision(6)<<elapsed<<','<<stats.comparisons<<','<<stats.moves<<','
       <<(correct?"YES":"NO")<<'\n';
-   if(!correct)throw runtime_error(string("Incorrect sort: ")+method.name);
-   cout<<setw(5)<<n<<" "<<setw(7)<<orders[kind]<<" "<<setw(16)<<method.name
-       <<" "<<fixed<<setprecision(4)<<ms<<" ms; comparisons="<<s.comparisons
-       <<"; moves="<<s.moves<<" OK\n";
+   if(!correct)throw std::runtime_error(std::string("Incorrect result: ")+method.name);
+   std::cout<<std::setw(5)<<n<<" "<<std::setw(7)<<orders[order]<<" "
+            <<std::setw(16)<<method.name<<" "<<std::fixed<<std::setprecision(4)
+            <<elapsed<<" ms OK\n";
   }
  }
- cout<<"Results saved: "<<csv<<"\n";
+ std::cout<<"Saved: "<<outputName<<"\n";
 }
 
-int main(){try{experiment(3,{2000,5000,6800},"variant3_results.csv");return 0;}catch(const exception& e){cerr<<e.what()<<'\n';return 1;}}
+int main(){
+ try{runExperiment(3,{2000,5000,6800},"variant3_results.csv");return 0;}
+ catch(const std::exception& error){std::cerr<<"Error: "<<error.what()<<'\n';return 1;}
+}
