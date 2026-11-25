@@ -1,0 +1,12 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: shell_results.csv>
+index,Method,N,Type,Time_s,Comparisons,Moves,Correct
+0,Shell sort,4000,Random,0.000273513,84575.0,126610.4,YES
+1,Shell sort,4000,Ascending,4.9286e-05,40006.0,80012.0,YES
+2,Shell sort,4000,Descending,6.0096e-05,58811.4,102807.4,YES
+3,Shell sort,10000,Random,0.000788363,267692.4,392785.0,YES
+4,Shell sort,10000,Ascending,0.000140986,120005.0,240010.0,YES
+5,Shell sort,10000,Descending,0.000182318,172558.8,302550.8,YES
+6,Shell sort,13600,Random,0.00107891,376776.2,546865.4,YES
+7,Shell sort,13600,Ascending,0.000202553,163205.0,326410.0,YES
+8,Shell sort,13600,Descending,0.000256045,233508.6,410302.6,YES
