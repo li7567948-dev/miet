@@ -1,0 +1,2517 @@
+Laboratory work 4
+
+1 - Voyager
+2 - Turing machine
+3 - All experiments
+0 - Exit
+Choice: 
+Textbook common matrix
+  INF    7   12   25   10
+   10  INF    9    5   11
+   13    8  INF    6    4
+    6   11   15  INF   15
+    5    9   12   17  INF
+Node 1: lower bound=31
+  INF    0    1   18    3
+    5  INF    0    0    6
+    9    4  INF    2    0
+    0    5    5  INF    9
+    0    4    3   12  INF
+Zero (1,2): penalty=5
+Zero (2,3): penalty=1
+Zero (2,4): penalty=2
+Zero (3,5): penalty=5
+Zero (4,1): penalty=5
+Zero (5,1): penalty=3
+Include 1 -> 2
+Node 2: lower bound=31
+  INF    0    0    6
+    9  INF    2    0
+    0    5  INF    9
+    0    3   12  INF
+Zero (2,3): penalty=3
+Zero (2,4): penalty=2
+Zero (3,5): penalty=8
+Zero (4,1): penalty=5
+Zero (5,1): penalty=3
+Include 3 -> 5
+Node 3: lower bound=31
+  INF    0    0
+    0    5  INF
+    0  INF   12
+Zero (2,3): penalty=5
+Zero (2,4): penalty=12
+Zero (4,1): penalty=5
+Zero (5,1): penalty=12
+Include 2 -> 4
+Node 4: lower bound=36
+  INF    0
+    0  INF
+Zero (4,3): penalty=200000000
+Zero (5,1): penalty=200000000
+Include 4 -> 3
+Node 5: lower bound=36
+    0
+Zero (5,1): penalty=200000000
+Include 5 -> 1
+Node 6: lower bound=36
+New record: 36
+Exclude 5 -> 1
+Exclude 4 -> 3
+Exclude 2 -> 4
+Exclude 3 -> 5
+Exclude 1 -> 2
+N = 5, removed arcs = 0
+Route: 1 -> 2 -> 4 -> 3 -> 5 -> 1
+Cost: 7 + 5 + 15 + 4 + 5 = 36
+Nodes: 11, pruned: 5
+Time (us): 24.479
+Verification: PASS
+
+Variant 1
+  INF  INF   12   25   10
+   10  INF    9    5   11
+   13    8  INF    6  INF
+    6   11   15  INF   15
+    5    9   12   17  INF
+Node 1: lower bound=36
+  INF  INF    0   15    0
+    5  INF    2    0    6
+    7    0  INF    0  INF
+    0    3    7  INF    9
+    0    2    5   12  INF
+Zero (1,3): penalty=2
+Zero (1,5): penalty=6
+Zero (2,4): penalty=2
+Zero (3,2): penalty=2
+Zero (3,4): penalty=0
+Zero (4,1): penalty=3
+Zero (5,1): penalty=2
+Include 1 -> 5
+Node 2: lower bound=40
+    5  INF    0    0
+    7    0  INF    0
+    0    3    5  INF
+  INF    0    1   10
+Zero (2,3): penalty=1
+Zero (2,4): penalty=0
+Zero (3,2): penalty=0
+Zero (3,4): penalty=0
+Zero (4,1): penalty=8
+Zero (5,2): penalty=1
+Include 4 -> 1
+Node 3: lower bound=40
+  INF    0    0
+    0  INF    0
+    0    1  INF
+Zero (2,3): penalty=1
+Zero (2,4): penalty=0
+Zero (3,2): penalty=0
+Zero (3,4): penalty=0
+Zero (5,2): penalty=1
+Include 2 -> 3
+Node 4: lower bound=40
+  INF    0
+    0  INF
+Zero (3,4): penalty=200000000
+Zero (5,2): penalty=200000000
+Include 3 -> 4
+Node 5: lower bound=40
+    0
+Zero (5,2): penalty=200000000
+Include 5 -> 2
+Node 6: lower bound=40
+New record: 40
+Exclude 5 -> 2
+Exclude 3 -> 4
+Exclude 2 -> 3
+Exclude 4 -> 1
+Exclude 1 -> 5
+N = 5, removed arcs = 2
+Route: 1 -> 5 -> 2 -> 3 -> 4 -> 1
+Cost: 10 + 9 + 9 + 6 + 6 = 40
+Nodes: 11, pruned: 5
+Time (us): 18.116
+Verification: PASS
+
+Variant 3
+  INF    7   12   25   10
+   10  INF    9  INF   11
+   13    8  INF    6    4
+    6   11   15  INF   15
+    5    9   12   17  INF
+Node 1: lower bound=33
+  INF    0    5   16    3
+    1  INF    0  INF    2
+    9    4  INF    0    0
+    0    5    9  INF    9
+    0    4    7   10  INF
+Zero (1,2): penalty=7
+Zero (2,3): penalty=6
+Zero (3,4): penalty=10
+Zero (3,5): penalty=2
+Zero (4,1): penalty=5
+Zero (5,1): penalty=4
+Include 3 -> 4
+Node 2: lower bound=35
+  INF    0    5    1
+    1  INF    0    0
+    0    5  INF    7
+    0    4    7  INF
+Zero (1,2): penalty=5
+Zero (2,3): penalty=5
+Zero (2,5): penalty=1
+Zero (4,1): penalty=5
+Zero (5,1): penalty=4
+Include 1 -> 2
+Node 3: lower bound=35
+  INF    0    0
+    0  INF    7
+    0    7  INF
+Zero (2,3): penalty=7
+Zero (2,5): penalty=7
+Zero (4,1): penalty=7
+Zero (5,1): penalty=7
+Include 2 -> 3
+Node 4: lower bound=42
+  INF    0
+    0  INF
+Zero (4,5): penalty=200000000
+Zero (5,1): penalty=200000000
+Include 4 -> 5
+Node 5: lower bound=42
+    0
+Zero (5,1): penalty=200000000
+Include 5 -> 1
+Node 6: lower bound=42
+New record: 42
+Exclude 5 -> 1
+Exclude 4 -> 5
+Exclude 2 -> 3
+Exclude 1 -> 2
+Node 10: lower bound=40
+  INF  INF    4    0
+    1  INF    0    0
+    0    1  INF    7
+    0    0    7  INF
+Zero (1,5): penalty=4
+Zero (2,3): penalty=4
+Zero (2,5): penalty=0
+Zero (4,1): penalty=1
+Zero (5,1): penalty=0
+Zero (5,2): penalty=1
+Include 1 -> 5
+Node 11: lower bound=40
+    1  INF    0
+    0    1  INF
+  INF    0    7
+Zero (2,3): penalty=8
+Zero (4,1): penalty=2
+Zero (5,2): penalty=8
+Include 2 -> 3
+Node 12: lower bound=40
+    0  INF
+  INF    0
+Zero (4,1): penalty=200000000
+Zero (5,2): penalty=200000000
+Include 4 -> 1
+Node 13: lower bound=40
+    0
+Zero (5,2): penalty=200000000
+Include 5 -> 2
+Node 14: lower bound=40
+New record: 40
+Exclude 5 -> 2
+Exclude 4 -> 1
+Exclude 2 -> 3
+Exclude 1 -> 5
+Exclude 3 -> 4
+N = 5, removed arcs = 1
+Route: 1 -> 5 -> 2 -> 3 -> 4 -> 1
+Cost: 10 + 9 + 9 + 6 + 6 = 40
+Nodes: 19, pruned: 8
+Time (us): 33.319
+Verification: PASS
+
+Variant 4
+  INF  INF   12   25   10    8
+   10  INF    9    5   11    6
+   13    8  INF    6  INF    9
+    6   11   15  INF   15    7
+    5    9   12   17  INF   10
+    8    6    9  INF   10  INF
+Node 1: lower bound=41
+  INF  INF    1   17    0    0
+    5  INF    1    0    4    1
+    7    2  INF    0  INF    3
+    0    5    6  INF    7    1
+    0    4    4   12  INF    5
+    2    0    0  INF    2  INF
+Zero (1,5): penalty=2
+Zero (1,6): penalty=1
+Zero (2,4): penalty=1
+Zero (3,4): penalty=2
+Zero (4,1): penalty=1
+Zero (5,1): penalty=4
+Zero (6,2): penalty=2
+Zero (6,3): penalty=1
+Include 5 -> 1
+Node 2: lower bound=44
+  INF    1   17  INF    0
+  INF    1    0    2    1
+    2  INF    0  INF    3
+    4    5  INF    4    0
+    0    0  INF    0  INF
+Zero (1,6): penalty=1
+Zero (2,4): penalty=1
+Zero (3,4): penalty=2
+Zero (4,6): penalty=4
+Zero (6,2): penalty=2
+Zero (6,3): penalty=1
+Zero (6,5): penalty=2
+Include 4 -> 6
+Node 3: lower bound=45
+  INF    0   16  INF
+  INF    1    0    2
+    2  INF    0  INF
+    0    0  INF    0
+Zero (1,3): penalty=16
+Zero (2,4): penalty=1
+Zero (3,4): penalty=2
+Zero (6,2): penalty=2
+Zero (6,3): penalty=0
+Zero (6,5): penalty=2
+Include 1 -> 3
+Node 4: lower bound=45
+  INF    0    2
+    2    0  INF
+    0  INF    0
+Zero (2,4): penalty=2
+Zero (3,4): penalty=2
+Zero (6,2): penalty=2
+Zero (6,5): penalty=2
+Include 2 -> 4
+Node 5: lower bound=47
+    0  INF
+  INF    0
+Zero (3,2): penalty=200000000
+Zero (6,5): penalty=200000000
+Include 3 -> 2
+Node 6: lower bound=47
+    0
+Zero (6,5): penalty=200000000
+Include 6 -> 5
+Node 7: lower bound=47
+New record: 47
+Exclude 6 -> 5
+Exclude 3 -> 2
+Exclude 2 -> 4
+Exclude 1 -> 3
+Exclude 4 -> 6
+Exclude 5 -> 1
+Node 13: lower bound=45
+  INF  INF    1   17    0    0
+    5  INF    1    0    4    1
+    7    2  INF    0  INF    3
+    0    5    6  INF    7    1
+  INF    0    0    8  INF    1
+    2    0    0  INF    2  INF
+Zero (1,5): penalty=2
+Zero (1,6): penalty=1
+Zero (2,4): penalty=1
+Zero (3,4): penalty=2
+Zero (4,1): penalty=3
+Zero (5,2): penalty=0
+Zero (5,3): penalty=0
+Zero (6,2): penalty=0
+Zero (6,3): penalty=0
+Include 4 -> 1
+Node 14: lower bound=45
+  INF    1  INF    0    0
+  INF    1    0    4    1
+    2  INF    0  INF    3
+    0    0    8  INF    1
+    0    0  INF    2  INF
+Zero (1,5): penalty=2
+Zero (1,6): penalty=1
+Zero (2,4): penalty=1
+Zero (3,4): penalty=2
+Zero (5,2): penalty=0
+Zero (5,3): penalty=0
+Zero (6,2): penalty=0
+Zero (6,3): penalty=0
+Include 1 -> 5
+Node 15: lower bound=46
+  INF    1    0    0
+    2  INF    0    2
+    0    0  INF    0
+    0    0  INF  INF
+Zero (2,4): penalty=0
+Zero (2,6): penalty=0
+Zero (3,4): penalty=2
+Zero (5,2): penalty=0
+Zero (5,3): penalty=0
+Zero (5,6): penalty=0
+Zero (6,2): penalty=0
+Zero (6,3): penalty=0
+Include 3 -> 4
+Node 16: lower bound=46
+  INF    1    0
+    0  INF    0
+    0    0  INF
+Zero (2,6): penalty=1
+Zero (5,2): penalty=0
+Zero (5,6): penalty=0
+Zero (6,2): penalty=0
+Zero (6,3): penalty=1
+Include 2 -> 6
+Node 17: lower bound=46
+    0  INF
+  INF    0
+Zero (5,2): penalty=200000000
+Zero (6,3): penalty=200000000
+Include 5 -> 2
+Node 18: lower bound=46
+    0
+Zero (6,3): penalty=200000000
+Include 6 -> 3
+Node 19: lower bound=46
+New record: 46
+Exclude 6 -> 3
+Exclude 5 -> 2
+Exclude 2 -> 6
+Exclude 3 -> 4
+Exclude 1 -> 5
+Exclude 4 -> 1
+N = 6, removed arcs = 3
+Route: 1 -> 5 -> 2 -> 6 -> 3 -> 4 -> 1
+Cost: 10 + 9 + 6 + 9 + 6 + 6 = 46
+Nodes: 25, pruned: 11
+Time (us): 46.555
+Verification: PASS
+
+Decimal to unary: input=5
+0: q0, head=0, read=5 -> write5, write=_, move=0
+1: write5, head=0, read=_ -> write4, write=1, move=1
+2: write4, head=1, read=_ -> write3, write=1, move=1
+3: write3, head=2, read=_ -> write2, write=1, move=1
+4: write2, head=3, read=_ -> write1, write=1, move=1
+5: write1, head=4, read=_ -> halt, write=1, move=1
+Output: 11111
+Verification: PASS
+
+Unary to decimal: input=11111
+0: q0, head=0, read=1 -> count1, write=_, move=1
+1: count1, head=1, read=1 -> count2, write=_, move=1
+2: count2, head=2, read=1 -> count3, write=_, move=1
+3: count3, head=3, read=1 -> count4, write=_, move=1
+4: count4, head=4, read=1 -> count5, write=_, move=1
+5: count5, head=5, read=_ -> halt, write=5, move=0
+Output: 5
+Verification: PASS
+
+Variant 1: input=01101
+0: q0, head=0, read=0 -> q0, write=1, move=1
+1: q0, head=1, read=1 -> q0, write=0, move=1
+2: q0, head=2, read=1 -> q0, write=0, move=1
+3: q0, head=3, read=0 -> q0, write=1, move=1
+4: q0, head=4, read=1 -> q0, write=0, move=1
+5: q0, head=5, read=_ -> pick, write=*, move=-1
+6: pick, head=4, read=0 -> carry0, write=X, move=1
+7: carry0, head=5, read=* -> carry0, write=*, move=1
+8: carry0, head=6, read=_ -> return, write=0, move=-1
+9: return, head=5, read=* -> pick, write=*, move=-1
+10: pick, head=4, read=X -> pick, write=X, move=-1
+11: pick, head=3, read=1 -> carry1, write=Y, move=1
+12: carry1, head=4, read=X -> carry1, write=X, move=1
+13: carry1, head=5, read=* -> carry1, write=*, move=1
+14: carry1, head=6, read=0 -> carry1, write=0, move=1
+15: carry1, head=7, read=_ -> return, write=1, move=-1
+16: return, head=6, read=0 -> return, write=0, move=-1
+17: return, head=5, read=* -> pick, write=*, move=-1
+18: pick, head=4, read=X -> pick, write=X, move=-1
+19: pick, head=3, read=Y -> pick, write=Y, move=-1
+20: pick, head=2, read=0 -> carry0, write=X, move=1
+21: carry0, head=3, read=Y -> carry0, write=Y, move=1
+22: carry0, head=4, read=X -> carry0, write=X, move=1
+23: carry0, head=5, read=* -> carry0, write=*, move=1
+24: carry0, head=6, read=0 -> carry0, write=0, move=1
+25: carry0, head=7, read=1 -> carry0, write=1, move=1
+26: carry0, head=8, read=_ -> return, write=0, move=-1
+27: return, head=7, read=1 -> return, write=1, move=-1
+28: return, head=6, read=0 -> return, write=0, move=-1
+29: return, head=5, read=* -> pick, write=*, move=-1
+30: pick, head=4, read=X -> pick, write=X, move=-1
+31: pick, head=3, read=Y -> pick, write=Y, move=-1
+32: pick, head=2, read=X -> pick, write=X, move=-1
+33: pick, head=1, read=0 -> carry0, write=X, move=1
+34: carry0, head=2, read=X -> carry0, write=X, move=1
+35: carry0, head=3, read=Y -> carry0, write=Y, move=1
+36: carry0, head=4, read=X -> carry0, write=X, move=1
+37: carry0, head=5, read=* -> carry0, write=*, move=1
+38: carry0, head=6, read=0 -> carry0, write=0, move=1
+39: carry0, head=7, read=1 -> carry0, write=1, move=1
+40: carry0, head=8, read=0 -> carry0, write=0, move=1
+41: carry0, head=9, read=_ -> return, write=0, move=-1
+42: return, head=8, read=0 -> return, write=0, move=-1
+43: return, head=7, read=1 -> return, write=1, move=-1
+44: return, head=6, read=0 -> return, write=0, move=-1
+45: return, head=5, read=* -> pick, write=*, move=-1
+46: pick, head=4, read=X -> pick, write=X, move=-1
+47: pick, head=3, read=Y -> pick, write=Y, move=-1
+48: pick, head=2, read=X -> pick, write=X, move=-1
+49: pick, head=1, read=X -> pick, write=X, move=-1
+50: pick, head=0, read=1 -> carry1, write=Y, move=1
+51: carry1, head=1, read=X -> carry1, write=X, move=1
+52: carry1, head=2, read=X -> carry1, write=X, move=1
+53: carry1, head=3, read=Y -> carry1, write=Y, move=1
+54: carry1, head=4, read=X -> carry1, write=X, move=1
+55: carry1, head=5, read=* -> carry1, write=*, move=1
+56: carry1, head=6, read=0 -> carry1, write=0, move=1
+57: carry1, head=7, read=1 -> carry1, write=1, move=1
+58: carry1, head=8, read=0 -> carry1, write=0, move=1
+59: carry1, head=9, read=0 -> carry1, write=0, move=1
+60: carry1, head=10, read=_ -> return, write=1, move=-1
+61: return, head=9, read=0 -> return, write=0, move=-1
+62: return, head=8, read=0 -> return, write=0, move=-1
+63: return, head=7, read=1 -> return, write=1, move=-1
+64: return, head=6, read=0 -> return, write=0, move=-1
+65: return, head=5, read=* -> pick, write=*, move=-1
+66: pick, head=4, read=X -> pick, write=X, move=-1
+67: pick, head=3, read=Y -> pick, write=Y, move=-1
+68: pick, head=2, read=X -> pick, write=X, move=-1
+69: pick, head=1, read=X -> pick, write=X, move=-1
+70: pick, head=0, read=Y -> pick, write=Y, move=-1
+71: pick, head=-1, read=_ -> restore, write=_, move=1
+72: restore, head=0, read=Y -> restore, write=1, move=1
+73: restore, head=1, read=X -> restore, write=0, move=1
+74: restore, head=2, read=X -> restore, write=0, move=1
+75: restore, head=3, read=Y -> restore, write=1, move=1
+76: restore, head=4, read=X -> restore, write=0, move=1
+77: restore, head=5, read=* -> halt, write=*, move=0
+Output: 10010*01001
+Verification: PASS
+
+Variant 4: input=01101011010
+0: q0, head=0, read=0 -> count1, write=0, move=1
+1: count1, head=1, read=1 -> count2, write=1, move=1
+2: count2, head=2, read=1 -> boundary, write=1, move=1
+3: boundary, head=3, read=0 -> shift0, write=*, move=1
+4: shift0, head=4, read=1 -> shift1, write=0, move=1
+5: shift1, head=5, read=0 -> shift0, write=1, move=1
+6: shift0, head=6, read=1 -> shift1, write=0, move=1
+7: shift1, head=7, read=1 -> shift1, write=1, move=1
+8: shift1, head=8, read=0 -> shift0, write=1, move=1
+9: shift0, head=9, read=1 -> shift1, write=0, move=1
+10: shift1, head=10, read=0 -> shift0, write=1, move=1
+11: shift0, head=11, read=_ -> rewind, write=0, move=-1
+12: rewind, head=10, read=1 -> rewind, write=1, move=-1
+13: rewind, head=9, read=0 -> rewind, write=0, move=-1
+14: rewind, head=8, read=1 -> rewind, write=1, move=-1
+15: rewind, head=7, read=1 -> rewind, write=1, move=-1
+16: rewind, head=6, read=0 -> rewind, write=0, move=-1
+17: rewind, head=5, read=1 -> rewind, write=1, move=-1
+18: rewind, head=4, read=0 -> rewind, write=0, move=-1
+19: rewind, head=3, read=* -> q0, write=*, move=1
+20: q0, head=4, read=0 -> count1, write=0, move=1
+21: count1, head=5, read=1 -> count2, write=1, move=1
+22: count2, head=6, read=0 -> boundary, write=0, move=1
+23: boundary, head=7, read=1 -> shift1, write=*, move=1
+24: shift1, head=8, read=1 -> shift1, write=1, move=1
+25: shift1, head=9, read=0 -> shift0, write=1, move=1
+26: shift0, head=10, read=1 -> shift1, write=0, move=1
+27: shift1, head=11, read=0 -> shift0, write=1, move=1
+28: shift0, head=12, read=_ -> rewind, write=0, move=-1
+29: rewind, head=11, read=1 -> rewind, write=1, move=-1
+30: rewind, head=10, read=0 -> rewind, write=0, move=-1
+31: rewind, head=9, read=1 -> rewind, write=1, move=-1
+32: rewind, head=8, read=1 -> rewind, write=1, move=-1
+33: rewind, head=7, read=* -> q0, write=*, move=1
+34: q0, head=8, read=1 -> count1, write=1, move=1
+35: count1, head=9, read=1 -> count2, write=1, move=1
+36: count2, head=10, read=0 -> boundary, write=0, move=1
+37: boundary, head=11, read=1 -> shift1, write=*, move=1
+38: shift1, head=12, read=0 -> shift0, write=1, move=1
+39: shift0, head=13, read=_ -> rewind, write=0, move=-1
+40: rewind, head=12, read=1 -> rewind, write=1, move=-1
+41: rewind, head=11, read=* -> q0, write=*, move=1
+42: q0, head=12, read=1 -> count1, write=1, move=1
+43: count1, head=13, read=0 -> count2, write=0, move=1
+44: count2, head=14, read=_ -> halt, write=_, move=0
+Output: 011*010*110*10
+Verification: PASS
+
+Variant 5: input=01101
+0: q0, head=0, read=0 -> q0, write=1, move=1
+1: q0, head=1, read=1 -> q0, write=0, move=1
+2: q0, head=2, read=1 -> q0, write=0, move=1
+3: q0, head=3, read=0 -> q0, write=1, move=1
+4: q0, head=4, read=1 -> q0, write=0, move=1
+5: q0, head=5, read=_ -> back, write=*, move=-1
+6: back, head=4, read=0 -> back, write=0, move=-1
+7: back, head=3, read=1 -> back, write=1, move=-1
+8: back, head=2, read=0 -> back, write=0, move=-1
+9: back, head=1, read=0 -> back, write=0, move=-1
+10: back, head=0, read=1 -> back, write=1, move=-1
+11: back, head=-1, read=_ -> pick, write=_, move=1
+12: pick, head=0, read=1 -> carry1, write=Y, move=1
+13: carry1, head=1, read=0 -> carry1, write=0, move=1
+14: carry1, head=2, read=0 -> carry1, write=0, move=1
+15: carry1, head=3, read=1 -> carry1, write=1, move=1
+16: carry1, head=4, read=0 -> carry1, write=0, move=1
+17: carry1, head=5, read=* -> carry1, write=*, move=1
+18: carry1, head=6, read=_ -> return, write=1, move=-1
+19: return, head=5, read=* -> back, write=*, move=-1
+20: back, head=4, read=0 -> back, write=0, move=-1
+21: back, head=3, read=1 -> back, write=1, move=-1
+22: back, head=2, read=0 -> back, write=0, move=-1
+23: back, head=1, read=0 -> back, write=0, move=-1
+24: back, head=0, read=Y -> back, write=Y, move=-1
+25: back, head=-1, read=_ -> pick, write=_, move=1
+26: pick, head=0, read=Y -> pick, write=Y, move=1
+27: pick, head=1, read=0 -> carry0, write=X, move=1
+28: carry0, head=2, read=0 -> carry0, write=0, move=1
+29: carry0, head=3, read=1 -> carry0, write=1, move=1
+30: carry0, head=4, read=0 -> carry0, write=0, move=1
+31: carry0, head=5, read=* -> carry0, write=*, move=1
+32: carry0, head=6, read=1 -> carry0, write=1, move=1
+33: carry0, head=7, read=_ -> return, write=0, move=-1
+34: return, head=6, read=1 -> return, write=1, move=-1
+35: return, head=5, read=* -> back, write=*, move=-1
+36: back, head=4, read=0 -> back, write=0, move=-1
+37: back, head=3, read=1 -> back, write=1, move=-1
+38: back, head=2, read=0 -> back, write=0, move=-1
+39: back, head=1, read=X -> back, write=X, move=-1
+40: back, head=0, read=Y -> back, write=Y, move=-1
+41: back, head=-1, read=_ -> pick, write=_, move=1
+42: pick, head=0, read=Y -> pick, write=Y, move=1
+43: pick, head=1, read=X -> pick, write=X, move=1
+44: pick, head=2, read=0 -> carry0, write=X, move=1
+45: carry0, head=3, read=1 -> carry0, write=1, move=1
+46: carry0, head=4, read=0 -> carry0, write=0, move=1
+47: carry0, head=5, read=* -> carry0, write=*, move=1
+48: carry0, head=6, read=1 -> carry0, write=1, move=1
+49: carry0, head=7, read=0 -> carry0, write=0, move=1
+50: carry0, head=8, read=_ -> return, write=0, move=-1
+51: return, head=7, read=0 -> return, write=0, move=-1
+52: return, head=6, read=1 -> return, write=1, move=-1
+53: return, head=5, read=* -> back, write=*, move=-1
+54: back, head=4, read=0 -> back, write=0, move=-1
+55: back, head=3, read=1 -> back, write=1, move=-1
+56: back, head=2, read=X -> back, write=X, move=-1
+57: back, head=1, read=X -> back, write=X, move=-1
+58: back, head=0, read=Y -> back, write=Y, move=-1
+59: back, head=-1, read=_ -> pick, write=_, move=1
+60: pick, head=0, read=Y -> pick, write=Y, move=1
+61: pick, head=1, read=X -> pick, write=X, move=1
+62: pick, head=2, read=X -> pick, write=X, move=1
+63: pick, head=3, read=1 -> carry1, write=Y, move=1
+64: carry1, head=4, read=0 -> carry1, write=0, move=1
+65: carry1, head=5, read=* -> carry1, write=*, move=1
+66: carry1, head=6, read=1 -> carry1, write=1, move=1
+67: carry1, head=7, read=0 -> carry1, write=0, move=1
+68: carry1, head=8, read=0 -> carry1, write=0, move=1
+69: carry1, head=9, read=_ -> return, write=1, move=-1
+70: return, head=8, read=0 -> return, write=0, move=-1
+71: return, head=7, read=0 -> return, write=0, move=-1
+72: return, head=6, read=1 -> return, write=1, move=-1
+73: return, head=5, read=* -> back, write=*, move=-1
+74: back, head=4, read=0 -> back, write=0, move=-1
+75: back, head=3, read=Y -> back, write=Y, move=-1
+76: back, head=2, read=X -> back, write=X, move=-1
+77: back, head=1, read=X -> back, write=X, move=-1
+78: back, head=0, read=Y -> back, write=Y, move=-1
+79: back, head=-1, read=_ -> pick, write=_, move=1
+80: pick, head=0, read=Y -> pick, write=Y, move=1
+81: pick, head=1, read=X -> pick, write=X, move=1
+82: pick, head=2, read=X -> pick, write=X, move=1
+83: pick, head=3, read=Y -> pick, write=Y, move=1
+84: pick, head=4, read=0 -> carry0, write=X, move=1
+85: carry0, head=5, read=* -> carry0, write=*, move=1
+86: carry0, head=6, read=1 -> carry0, write=1, move=1
+87: carry0, head=7, read=0 -> carry0, write=0, move=1
+88: carry0, head=8, read=0 -> carry0, write=0, move=1
+89: carry0, head=9, read=1 -> carry0, write=1, move=1
+90: carry0, head=10, read=_ -> return, write=0, move=-1
+91: return, head=9, read=1 -> return, write=1, move=-1
+92: return, head=8, read=0 -> return, write=0, move=-1
+93: return, head=7, read=0 -> return, write=0, move=-1
+94: return, head=6, read=1 -> return, write=1, move=-1
+95: return, head=5, read=* -> back, write=*, move=-1
+96: back, head=4, read=X -> back, write=X, move=-1
+97: back, head=3, read=Y -> back, write=Y, move=-1
+98: back, head=2, read=X -> back, write=X, move=-1
+99: back, head=1, read=X -> back, write=X, move=-1
+100: back, head=0, read=Y -> back, write=Y, move=-1
+101: back, head=-1, read=_ -> pick, write=_, move=1
+102: pick, head=0, read=Y -> pick, write=Y, move=1
+103: pick, head=1, read=X -> pick, write=X, move=1
+104: pick, head=2, read=X -> pick, write=X, move=1
+105: pick, head=3, read=Y -> pick, write=Y, move=1
+106: pick, head=4, read=X -> pick, write=X, move=1
+107: pick, head=5, read=* -> restore, write=*, move=-1
+108: restore, head=4, read=X -> restore, write=0, move=-1
+109: restore, head=3, read=Y -> restore, write=1, move=-1
+110: restore, head=2, read=X -> restore, write=0, move=-1
+111: restore, head=1, read=X -> restore, write=0, move=-1
+112: restore, head=0, read=Y -> restore, write=1, move=-1
+113: restore, head=-1, read=_ -> halt, write=_, move=0
+Output: 10010*10010
+Verification: PASS
+
+Literal binary copy: input=01101
+0: q0, head=0, read=0 -> q0, write=0, move=1
+1: q0, head=1, read=1 -> q0, write=1, move=1
+2: q0, head=2, read=1 -> q0, write=1, move=1
+3: q0, head=3, read=0 -> q0, write=0, move=1
+4: q0, head=4, read=1 -> q0, write=1, move=1
+5: q0, head=5, read=_ -> back, write=*, move=-1
+6: back, head=4, read=1 -> back, write=1, move=-1
+7: back, head=3, read=0 -> back, write=0, move=-1
+8: back, head=2, read=1 -> back, write=1, move=-1
+9: back, head=1, read=1 -> back, write=1, move=-1
+10: back, head=0, read=0 -> back, write=0, move=-1
+11: back, head=-1, read=_ -> pick, write=_, move=1
+12: pick, head=0, read=0 -> carry0, write=X, move=1
+13: carry0, head=1, read=1 -> carry0, write=1, move=1
+14: carry0, head=2, read=1 -> carry0, write=1, move=1
+15: carry0, head=3, read=0 -> carry0, write=0, move=1
+16: carry0, head=4, read=1 -> carry0, write=1, move=1
+17: carry0, head=5, read=* -> carry0, write=*, move=1
+18: carry0, head=6, read=_ -> back, write=0, move=-1
+19: back, head=5, read=* -> back, write=*, move=-1
+20: back, head=4, read=1 -> back, write=1, move=-1
+21: back, head=3, read=0 -> back, write=0, move=-1
+22: back, head=2, read=1 -> back, write=1, move=-1
+23: back, head=1, read=1 -> back, write=1, move=-1
+24: back, head=0, read=X -> back, write=X, move=-1
+25: back, head=-1, read=_ -> pick, write=_, move=1
+26: pick, head=0, read=X -> pick, write=X, move=1
+27: pick, head=1, read=1 -> carry1, write=Y, move=1
+28: carry1, head=2, read=1 -> carry1, write=1, move=1
+29: carry1, head=3, read=0 -> carry1, write=0, move=1
+30: carry1, head=4, read=1 -> carry1, write=1, move=1
+31: carry1, head=5, read=* -> carry1, write=*, move=1
+32: carry1, head=6, read=0 -> carry1, write=0, move=1
+33: carry1, head=7, read=_ -> back, write=1, move=-1
+34: back, head=6, read=0 -> back, write=0, move=-1
+35: back, head=5, read=* -> back, write=*, move=-1
+36: back, head=4, read=1 -> back, write=1, move=-1
+37: back, head=3, read=0 -> back, write=0, move=-1
+38: back, head=2, read=1 -> back, write=1, move=-1
+39: back, head=1, read=Y -> back, write=Y, move=-1
+40: back, head=0, read=X -> back, write=X, move=-1
+41: back, head=-1, read=_ -> pick, write=_, move=1
+42: pick, head=0, read=X -> pick, write=X, move=1
+43: pick, head=1, read=Y -> pick, write=Y, move=1
+44: pick, head=2, read=1 -> carry1, write=Y, move=1
+45: carry1, head=3, read=0 -> carry1, write=0, move=1
+46: carry1, head=4, read=1 -> carry1, write=1, move=1
+47: carry1, head=5, read=* -> carry1, write=*, move=1
+48: carry1, head=6, read=0 -> carry1, write=0, move=1
+49: carry1, head=7, read=1 -> carry1, write=1, move=1
+50: carry1, head=8, read=_ -> back, write=1, move=-1
+51: back, head=7, read=1 -> back, write=1, move=-1
+52: back, head=6, read=0 -> back, write=0, move=-1
+53: back, head=5, read=* -> back, write=*, move=-1
+54: back, head=4, read=1 -> back, write=1, move=-1
+55: back, head=3, read=0 -> back, write=0, move=-1
+56: back, head=2, read=Y -> back, write=Y, move=-1
+57: back, head=1, read=Y -> back, write=Y, move=-1
+58: back, head=0, read=X -> back, write=X, move=-1
+59: back, head=-1, read=_ -> pick, write=_, move=1
+60: pick, head=0, read=X -> pick, write=X, move=1
+61: pick, head=1, read=Y -> pick, write=Y, move=1
+62: pick, head=2, read=Y -> pick, write=Y, move=1
+63: pick, head=3, read=0 -> carry0, write=X, move=1
+64: carry0, head=4, read=1 -> carry0, write=1, move=1
+65: carry0, head=5, read=* -> carry0, write=*, move=1
+66: carry0, head=6, read=0 -> carry0, write=0, move=1
+67: carry0, head=7, read=1 -> carry0, write=1, move=1
+68: carry0, head=8, read=1 -> carry0, write=1, move=1
+69: carry0, head=9, read=_ -> back, write=0, move=-1
+70: back, head=8, read=1 -> back, write=1, move=-1
+71: back, head=7, read=1 -> back, write=1, move=-1
+72: back, head=6, read=0 -> back, write=0, move=-1
+73: back, head=5, read=* -> back, write=*, move=-1
+74: back, head=4, read=1 -> back, write=1, move=-1
+75: back, head=3, read=X -> back, write=X, move=-1
+76: back, head=2, read=Y -> back, write=Y, move=-1
+77: back, head=1, read=Y -> back, write=Y, move=-1
+78: back, head=0, read=X -> back, write=X, move=-1
+79: back, head=-1, read=_ -> pick, write=_, move=1
+80: pick, head=0, read=X -> pick, write=X, move=1
+81: pick, head=1, read=Y -> pick, write=Y, move=1
+82: pick, head=2, read=Y -> pick, write=Y, move=1
+83: pick, head=3, read=X -> pick, write=X, move=1
+84: pick, head=4, read=1 -> carry1, write=Y, move=1
+85: carry1, head=5, read=* -> carry1, write=*, move=1
+86: carry1, head=6, read=0 -> carry1, write=0, move=1
+87: carry1, head=7, read=1 -> carry1, write=1, move=1
+88: carry1, head=8, read=1 -> carry1, write=1, move=1
+89: carry1, head=9, read=0 -> carry1, write=0, move=1
+90: carry1, head=10, read=_ -> back, write=1, move=-1
+91: back, head=9, read=0 -> back, write=0, move=-1
+92: back, head=8, read=1 -> back, write=1, move=-1
+93: back, head=7, read=1 -> back, write=1, move=-1
+94: back, head=6, read=0 -> back, write=0, move=-1
+95: back, head=5, read=* -> back, write=*, move=-1
+96: back, head=4, read=Y -> back, write=Y, move=-1
+97: back, head=3, read=X -> back, write=X, move=-1
+98: back, head=2, read=Y -> back, write=Y, move=-1
+99: back, head=1, read=Y -> back, write=Y, move=-1
+100: back, head=0, read=X -> back, write=X, move=-1
+101: back, head=-1, read=_ -> pick, write=_, move=1
+102: pick, head=0, read=X -> pick, write=X, move=1
+103: pick, head=1, read=Y -> pick, write=Y, move=1
+104: pick, head=2, read=Y -> pick, write=Y, move=1
+105: pick, head=3, read=X -> pick, write=X, move=1
+106: pick, head=4, read=Y -> pick, write=Y, move=1
+107: pick, head=5, read=* -> restore, write=*, move=-1
+108: restore, head=4, read=Y -> restore, write=1, move=-1
+109: restore, head=3, read=X -> restore, write=0, move=-1
+110: restore, head=2, read=Y -> restore, write=1, move=-1
+111: restore, head=1, read=Y -> restore, write=1, move=-1
+112: restore, head=0, read=X -> restore, write=0, move=-1
+113: restore, head=-1, read=_ -> halt, write=_, move=1
+Output: 01101*01101
+Verification: PASS
+
+Extra variant 6: input=111
+0: q0, head=0, read=1 -> q0, write=1, move=1
+1: q0, head=1, read=1 -> q0, write=1, move=1
+2: q0, head=2, read=1 -> q0, write=1, move=1
+3: q0, head=3, read=_ -> erase, write=_, move=-1
+4: erase, head=2, read=1 -> halt, write=_, move=0
+Output: 11
+Verification: PASS
+State | Read | Next | Write | Move
+back | * | back | * | -1
+back | 0 | back | 0 | -1
+back | 1 | back | 1 | -1
+back | X | back | X | -1
+back | Y | back | Y | -1
+back | _ | pick | _ | 1
+carry0 | * | carry0 | * | 1
+carry0 | 0 | carry0 | 0 | 1
+carry0 | 1 | carry0 | 1 | 1
+carry0 | X | carry0 | X | 1
+carry0 | Y | carry0 | Y | 1
+carry0 | _ | return | 0 | -1
+carry1 | * | carry1 | * | 1
+carry1 | 0 | carry1 | 0 | 1
+carry1 | 1 | carry1 | 1 | 1
+carry1 | X | carry1 | X | 1
+carry1 | Y | carry1 | Y | 1
+carry1 | _ | return | 1 | -1
+pick | 0 | carry0 | X | 1
+pick | 1 | carry1 | Y | 1
+pick | X | pick | X | -1
+pick | Y | pick | Y | -1
+pick | _ | restore | _ | 1
+q0 | 0 | q0 | 1 | 1
+q0 | 1 | q0 | 0 | 1
+q0 | _ | pick | * | -1
+restore | * | halt | * | 0
+restore | X | restore | 0 | 1
+restore | Y | restore | 1 | 1
+return | * | pick | * | -1
+return | 0 | return | 0 | -1
+return | 1 | return | 1 | -1
+State | Read | Next | Write | Move
+q0 | 0 | halt | _ | 0
+q0 | 1 | write1 | _ | 0
+q0 | 2 | write2 | _ | 0
+q0 | 3 | write3 | _ | 0
+q0 | 4 | write4 | _ | 0
+q0 | 5 | write5 | _ | 0
+q0 | 6 | write6 | _ | 0
+q0 | 7 | write7 | _ | 0
+q0 | 8 | write8 | _ | 0
+q0 | 9 | write9 | _ | 0
+write1 | _ | halt | 1 | 1
+write2 | _ | write1 | 1 | 1
+write3 | _ | write2 | 1 | 1
+write4 | _ | write3 | 1 | 1
+write5 | _ | write4 | 1 | 1
+write6 | _ | write5 | 1 | 1
+write7 | _ | write6 | 1 | 1
+write8 | _ | write7 | 1 | 1
+write9 | _ | write8 | 1 | 1
+State | Read | Next | Write | Move
+count1 | 1 | count2 | _ | 1
+count1 | _ | halt | 1 | 0
+count2 | 1 | count3 | _ | 1
+count2 | _ | halt | 2 | 0
+count3 | 1 | count4 | _ | 1
+count3 | _ | halt | 3 | 0
+count4 | 1 | count5 | _ | 1
+count4 | _ | halt | 4 | 0
+count5 | 1 | count6 | _ | 1
+count5 | _ | halt | 5 | 0
+count6 | 1 | count7 | _ | 1
+count6 | _ | halt | 6 | 0
+count7 | 1 | count8 | _ | 1
+count7 | _ | halt | 7 | 0
+count8 | 1 | count9 | _ | 1
+count8 | _ | halt | 8 | 0
+count9 | _ | halt | 9 | 0
+q0 | 1 | count1 | _ | 1
+q0 | _ | halt | 0 | 0
+State | Read | Next | Write | Move
+boundary | 0 | shift0 | * | 1
+boundary | 1 | shift1 | * | 1
+boundary | _ | halt | _ | 0
+count1 | 0 | count2 | 0 | 1
+count1 | 1 | count2 | 1 | 1
+count1 | _ | halt | _ | 0
+count2 | 0 | boundary | 0 | 1
+count2 | 1 | boundary | 1 | 1
+count2 | _ | halt | _ | 0
+q0 | 0 | count1 | 0 | 1
+q0 | 1 | count1 | 1 | 1
+q0 | _ | halt | _ | 0
+rewind | * | q0 | * | 1
+rewind | 0 | rewind | 0 | -1
+rewind | 1 | rewind | 1 | -1
+shift0 | 0 | shift0 | 0 | 1
+shift0 | 1 | shift1 | 0 | 1
+shift0 | _ | rewind | 0 | -1
+shift1 | 0 | shift0 | 1 | 1
+shift1 | 1 | shift1 | 1 | 1
+shift1 | _ | rewind | 1 | -1
+State | Read | Next | Write | Move
+back | * | back | * | -1
+back | 0 | back | 0 | -1
+back | 1 | back | 1 | -1
+back | X | back | X | -1
+back | Y | back | Y | -1
+back | _ | pick | _ | 1
+carry0 | * | carry0 | * | 1
+carry0 | 0 | carry0 | 0 | 1
+carry0 | 1 | carry0 | 1 | 1
+carry0 | X | carry0 | X | 1
+carry0 | Y | carry0 | Y | 1
+carry0 | _ | return | 0 | -1
+carry1 | * | carry1 | * | 1
+carry1 | 0 | carry1 | 0 | 1
+carry1 | 1 | carry1 | 1 | 1
+carry1 | X | carry1 | X | 1
+carry1 | Y | carry1 | Y | 1
+carry1 | _ | return | 1 | -1
+pick | * | restore | * | -1
+pick | 0 | carry0 | X | 1
+pick | 1 | carry1 | Y | 1
+pick | X | pick | X | 1
+pick | Y | pick | Y | 1
+q0 | 0 | q0 | 1 | 1
+q0 | 1 | q0 | 0 | 1
+q0 | _ | back | * | -1
+restore | X | restore | 0 | -1
+restore | Y | restore | 1 | -1
+restore | _ | halt | _ | 0
+return | * | back | * | -1
+return | 0 | return | 0 | -1
+return | 1 | return | 1 | -1
+State | Read | Next | Write | Move
+erase | 1 | halt | _ | 0
+q0 | 1 | q0 | 1 | 1
+q0 | _ | erase | _ | -1
+
+Mirror: input=0
+Output: 1*1
+Verification: PASS
+
+Grouping: input=0
+Output: 0
+Verification: PASS
+
+Copy: input=0
+Output: 1*1
+Verification: PASS
+
+Mirror: input=1
+Output: 0*0
+Verification: PASS
+
+Grouping: input=1
+Output: 1
+Verification: PASS
+
+Copy: input=1
+Output: 0*0
+Verification: PASS
+
+Mirror: input=00
+Output: 11*11
+Verification: PASS
+
+Grouping: input=00
+Output: 00
+Verification: PASS
+
+Copy: input=00
+Output: 11*11
+Verification: PASS
+
+Mirror: input=10
+Output: 01*10
+Verification: PASS
+
+Grouping: input=10
+Output: 10
+Verification: PASS
+
+Copy: input=10
+Output: 01*01
+Verification: PASS
+
+Mirror: input=01
+Output: 10*01
+Verification: PASS
+
+Grouping: input=01
+Output: 01
+Verification: PASS
+
+Copy: input=01
+Output: 10*10
+Verification: PASS
+
+Mirror: input=11
+Output: 00*00
+Verification: PASS
+
+Grouping: input=11
+Output: 11
+Verification: PASS
+
+Copy: input=11
+Output: 00*00
+Verification: PASS
+
+Mirror: input=000
+Output: 111*111
+Verification: PASS
+
+Grouping: input=000
+Output: 000
+Verification: PASS
+
+Copy: input=000
+Output: 111*111
+Verification: PASS
+
+Mirror: input=100
+Output: 011*110
+Verification: PASS
+
+Grouping: input=100
+Output: 100
+Verification: PASS
+
+Copy: input=100
+Output: 011*011
+Verification: PASS
+
+Mirror: input=010
+Output: 101*101
+Verification: PASS
+
+Grouping: input=010
+Output: 010
+Verification: PASS
+
+Copy: input=010
+Output: 101*101
+Verification: PASS
+
+Mirror: input=110
+Output: 001*100
+Verification: PASS
+
+Grouping: input=110
+Output: 110
+Verification: PASS
+
+Copy: input=110
+Output: 001*001
+Verification: PASS
+
+Mirror: input=001
+Output: 110*011
+Verification: PASS
+
+Grouping: input=001
+Output: 001
+Verification: PASS
+
+Copy: input=001
+Output: 110*110
+Verification: PASS
+
+Mirror: input=101
+Output: 010*010
+Verification: PASS
+
+Grouping: input=101
+Output: 101
+Verification: PASS
+
+Copy: input=101
+Output: 010*010
+Verification: PASS
+
+Mirror: input=011
+Output: 100*001
+Verification: PASS
+
+Grouping: input=011
+Output: 011
+Verification: PASS
+
+Copy: input=011
+Output: 100*100
+Verification: PASS
+
+Mirror: input=111
+Output: 000*000
+Verification: PASS
+
+Grouping: input=111
+Output: 111
+Verification: PASS
+
+Copy: input=111
+Output: 000*000
+Verification: PASS
+
+Mirror: input=0000
+Output: 1111*1111
+Verification: PASS
+
+Grouping: input=0000
+Output: 000*0
+Verification: PASS
+
+Copy: input=0000
+Output: 1111*1111
+Verification: PASS
+
+Mirror: input=1000
+Output: 0111*1110
+Verification: PASS
+
+Grouping: input=1000
+Output: 100*0
+Verification: PASS
+
+Copy: input=1000
+Output: 0111*0111
+Verification: PASS
+
+Mirror: input=0100
+Output: 1011*1101
+Verification: PASS
+
+Grouping: input=0100
+Output: 010*0
+Verification: PASS
+
+Copy: input=0100
+Output: 1011*1011
+Verification: PASS
+
+Mirror: input=1100
+Output: 0011*1100
+Verification: PASS
+
+Grouping: input=1100
+Output: 110*0
+Verification: PASS
+
+Copy: input=1100
+Output: 0011*0011
+Verification: PASS
+
+Mirror: input=0010
+Output: 1101*1011
+Verification: PASS
+
+Grouping: input=0010
+Output: 001*0
+Verification: PASS
+
+Copy: input=0010
+Output: 1101*1101
+Verification: PASS
+
+Mirror: input=1010
+Output: 0101*1010
+Verification: PASS
+
+Grouping: input=1010
+Output: 101*0
+Verification: PASS
+
+Copy: input=1010
+Output: 0101*0101
+Verification: PASS
+
+Mirror: input=0110
+Output: 1001*1001
+Verification: PASS
+
+Grouping: input=0110
+Output: 011*0
+Verification: PASS
+
+Copy: input=0110
+Output: 1001*1001
+Verification: PASS
+
+Mirror: input=1110
+Output: 0001*1000
+Verification: PASS
+
+Grouping: input=1110
+Output: 111*0
+Verification: PASS
+
+Copy: input=1110
+Output: 0001*0001
+Verification: PASS
+
+Mirror: input=0001
+Output: 1110*0111
+Verification: PASS
+
+Grouping: input=0001
+Output: 000*1
+Verification: PASS
+
+Copy: input=0001
+Output: 1110*1110
+Verification: PASS
+
+Mirror: input=1001
+Output: 0110*0110
+Verification: PASS
+
+Grouping: input=1001
+Output: 100*1
+Verification: PASS
+
+Copy: input=1001
+Output: 0110*0110
+Verification: PASS
+
+Mirror: input=0101
+Output: 1010*0101
+Verification: PASS
+
+Grouping: input=0101
+Output: 010*1
+Verification: PASS
+
+Copy: input=0101
+Output: 1010*1010
+Verification: PASS
+
+Mirror: input=1101
+Output: 0010*0100
+Verification: PASS
+
+Grouping: input=1101
+Output: 110*1
+Verification: PASS
+
+Copy: input=1101
+Output: 0010*0010
+Verification: PASS
+
+Mirror: input=0011
+Output: 1100*0011
+Verification: PASS
+
+Grouping: input=0011
+Output: 001*1
+Verification: PASS
+
+Copy: input=0011
+Output: 1100*1100
+Verification: PASS
+
+Mirror: input=1011
+Output: 0100*0010
+Verification: PASS
+
+Grouping: input=1011
+Output: 101*1
+Verification: PASS
+
+Copy: input=1011
+Output: 0100*0100
+Verification: PASS
+
+Mirror: input=0111
+Output: 1000*0001
+Verification: PASS
+
+Grouping: input=0111
+Output: 011*1
+Verification: PASS
+
+Copy: input=0111
+Output: 1000*1000
+Verification: PASS
+
+Mirror: input=1111
+Output: 0000*0000
+Verification: PASS
+
+Grouping: input=1111
+Output: 111*1
+Verification: PASS
+
+Copy: input=1111
+Output: 0000*0000
+Verification: PASS
+
+Mirror: input=00000
+Output: 11111*11111
+Verification: PASS
+
+Grouping: input=00000
+Output: 000*00
+Verification: PASS
+
+Copy: input=00000
+Output: 11111*11111
+Verification: PASS
+
+Mirror: input=10000
+Output: 01111*11110
+Verification: PASS
+
+Grouping: input=10000
+Output: 100*00
+Verification: PASS
+
+Copy: input=10000
+Output: 01111*01111
+Verification: PASS
+
+Mirror: input=01000
+Output: 10111*11101
+Verification: PASS
+
+Grouping: input=01000
+Output: 010*00
+Verification: PASS
+
+Copy: input=01000
+Output: 10111*10111
+Verification: PASS
+
+Mirror: input=11000
+Output: 00111*11100
+Verification: PASS
+
+Grouping: input=11000
+Output: 110*00
+Verification: PASS
+
+Copy: input=11000
+Output: 00111*00111
+Verification: PASS
+
+Mirror: input=00100
+Output: 11011*11011
+Verification: PASS
+
+Grouping: input=00100
+Output: 001*00
+Verification: PASS
+
+Copy: input=00100
+Output: 11011*11011
+Verification: PASS
+
+Mirror: input=10100
+Output: 01011*11010
+Verification: PASS
+
+Grouping: input=10100
+Output: 101*00
+Verification: PASS
+
+Copy: input=10100
+Output: 01011*01011
+Verification: PASS
+
+Mirror: input=01100
+Output: 10011*11001
+Verification: PASS
+
+Grouping: input=01100
+Output: 011*00
+Verification: PASS
+
+Copy: input=01100
+Output: 10011*10011
+Verification: PASS
+
+Mirror: input=11100
+Output: 00011*11000
+Verification: PASS
+
+Grouping: input=11100
+Output: 111*00
+Verification: PASS
+
+Copy: input=11100
+Output: 00011*00011
+Verification: PASS
+
+Mirror: input=00010
+Output: 11101*10111
+Verification: PASS
+
+Grouping: input=00010
+Output: 000*10
+Verification: PASS
+
+Copy: input=00010
+Output: 11101*11101
+Verification: PASS
+
+Mirror: input=10010
+Output: 01101*10110
+Verification: PASS
+
+Grouping: input=10010
+Output: 100*10
+Verification: PASS
+
+Copy: input=10010
+Output: 01101*01101
+Verification: PASS
+
+Mirror: input=01010
+Output: 10101*10101
+Verification: PASS
+
+Grouping: input=01010
+Output: 010*10
+Verification: PASS
+
+Copy: input=01010
+Output: 10101*10101
+Verification: PASS
+
+Mirror: input=11010
+Output: 00101*10100
+Verification: PASS
+
+Grouping: input=11010
+Output: 110*10
+Verification: PASS
+
+Copy: input=11010
+Output: 00101*00101
+Verification: PASS
+
+Mirror: input=00110
+Output: 11001*10011
+Verification: PASS
+
+Grouping: input=00110
+Output: 001*10
+Verification: PASS
+
+Copy: input=00110
+Output: 11001*11001
+Verification: PASS
+
+Mirror: input=10110
+Output: 01001*10010
+Verification: PASS
+
+Grouping: input=10110
+Output: 101*10
+Verification: PASS
+
+Copy: input=10110
+Output: 01001*01001
+Verification: PASS
+
+Mirror: input=01110
+Output: 10001*10001
+Verification: PASS
+
+Grouping: input=01110
+Output: 011*10
+Verification: PASS
+
+Copy: input=01110
+Output: 10001*10001
+Verification: PASS
+
+Mirror: input=11110
+Output: 00001*10000
+Verification: PASS
+
+Grouping: input=11110
+Output: 111*10
+Verification: PASS
+
+Copy: input=11110
+Output: 00001*00001
+Verification: PASS
+
+Mirror: input=00001
+Output: 11110*01111
+Verification: PASS
+
+Grouping: input=00001
+Output: 000*01
+Verification: PASS
+
+Copy: input=00001
+Output: 11110*11110
+Verification: PASS
+
+Mirror: input=10001
+Output: 01110*01110
+Verification: PASS
+
+Grouping: input=10001
+Output: 100*01
+Verification: PASS
+
+Copy: input=10001
+Output: 01110*01110
+Verification: PASS
+
+Mirror: input=01001
+Output: 10110*01101
+Verification: PASS
+
+Grouping: input=01001
+Output: 010*01
+Verification: PASS
+
+Copy: input=01001
+Output: 10110*10110
+Verification: PASS
+
+Mirror: input=11001
+Output: 00110*01100
+Verification: PASS
+
+Grouping: input=11001
+Output: 110*01
+Verification: PASS
+
+Copy: input=11001
+Output: 00110*00110
+Verification: PASS
+
+Mirror: input=00101
+Output: 11010*01011
+Verification: PASS
+
+Grouping: input=00101
+Output: 001*01
+Verification: PASS
+
+Copy: input=00101
+Output: 11010*11010
+Verification: PASS
+
+Mirror: input=10101
+Output: 01010*01010
+Verification: PASS
+
+Grouping: input=10101
+Output: 101*01
+Verification: PASS
+
+Copy: input=10101
+Output: 01010*01010
+Verification: PASS
+
+Mirror: input=01101
+Output: 10010*01001
+Verification: PASS
+
+Grouping: input=01101
+Output: 011*01
+Verification: PASS
+
+Copy: input=01101
+Output: 10010*10010
+Verification: PASS
+
+Mirror: input=11101
+Output: 00010*01000
+Verification: PASS
+
+Grouping: input=11101
+Output: 111*01
+Verification: PASS
+
+Copy: input=11101
+Output: 00010*00010
+Verification: PASS
+
+Mirror: input=00011
+Output: 11100*00111
+Verification: PASS
+
+Grouping: input=00011
+Output: 000*11
+Verification: PASS
+
+Copy: input=00011
+Output: 11100*11100
+Verification: PASS
+
+Mirror: input=10011
+Output: 01100*00110
+Verification: PASS
+
+Grouping: input=10011
+Output: 100*11
+Verification: PASS
+
+Copy: input=10011
+Output: 01100*01100
+Verification: PASS
+
+Mirror: input=01011
+Output: 10100*00101
+Verification: PASS
+
+Grouping: input=01011
+Output: 010*11
+Verification: PASS
+
+Copy: input=01011
+Output: 10100*10100
+Verification: PASS
+
+Mirror: input=11011
+Output: 00100*00100
+Verification: PASS
+
+Grouping: input=11011
+Output: 110*11
+Verification: PASS
+
+Copy: input=11011
+Output: 00100*00100
+Verification: PASS
+
+Mirror: input=00111
+Output: 11000*00011
+Verification: PASS
+
+Grouping: input=00111
+Output: 001*11
+Verification: PASS
+
+Copy: input=00111
+Output: 11000*11000
+Verification: PASS
+
+Mirror: input=10111
+Output: 01000*00010
+Verification: PASS
+
+Grouping: input=10111
+Output: 101*11
+Verification: PASS
+
+Copy: input=10111
+Output: 01000*01000
+Verification: PASS
+
+Mirror: input=01111
+Output: 10000*00001
+Verification: PASS
+
+Grouping: input=01111
+Output: 011*11
+Verification: PASS
+
+Copy: input=01111
+Output: 10000*10000
+Verification: PASS
+
+Mirror: input=11111
+Output: 00000*00000
+Verification: PASS
+
+Grouping: input=11111
+Output: 111*11
+Verification: PASS
+
+Copy: input=11111
+Output: 00000*00000
+Verification: PASS
+
+Mirror: input=000000
+Output: 111111*111111
+Verification: PASS
+
+Grouping: input=000000
+Output: 000*000
+Verification: PASS
+
+Copy: input=000000
+Output: 111111*111111
+Verification: PASS
+
+Mirror: input=100000
+Output: 011111*111110
+Verification: PASS
+
+Grouping: input=100000
+Output: 100*000
+Verification: PASS
+
+Copy: input=100000
+Output: 011111*011111
+Verification: PASS
+
+Mirror: input=010000
+Output: 101111*111101
+Verification: PASS
+
+Grouping: input=010000
+Output: 010*000
+Verification: PASS
+
+Copy: input=010000
+Output: 101111*101111
+Verification: PASS
+
+Mirror: input=110000
+Output: 001111*111100
+Verification: PASS
+
+Grouping: input=110000
+Output: 110*000
+Verification: PASS
+
+Copy: input=110000
+Output: 001111*001111
+Verification: PASS
+
+Mirror: input=001000
+Output: 110111*111011
+Verification: PASS
+
+Grouping: input=001000
+Output: 001*000
+Verification: PASS
+
+Copy: input=001000
+Output: 110111*110111
+Verification: PASS
+
+Mirror: input=101000
+Output: 010111*111010
+Verification: PASS
+
+Grouping: input=101000
+Output: 101*000
+Verification: PASS
+
+Copy: input=101000
+Output: 010111*010111
+Verification: PASS
+
+Mirror: input=011000
+Output: 100111*111001
+Verification: PASS
+
+Grouping: input=011000
+Output: 011*000
+Verification: PASS
+
+Copy: input=011000
+Output: 100111*100111
+Verification: PASS
+
+Mirror: input=111000
+Output: 000111*111000
+Verification: PASS
+
+Grouping: input=111000
+Output: 111*000
+Verification: PASS
+
+Copy: input=111000
+Output: 000111*000111
+Verification: PASS
+
+Mirror: input=000100
+Output: 111011*110111
+Verification: PASS
+
+Grouping: input=000100
+Output: 000*100
+Verification: PASS
+
+Copy: input=000100
+Output: 111011*111011
+Verification: PASS
+
+Mirror: input=100100
+Output: 011011*110110
+Verification: PASS
+
+Grouping: input=100100
+Output: 100*100
+Verification: PASS
+
+Copy: input=100100
+Output: 011011*011011
+Verification: PASS
+
+Mirror: input=010100
+Output: 101011*110101
+Verification: PASS
+
+Grouping: input=010100
+Output: 010*100
+Verification: PASS
+
+Copy: input=010100
+Output: 101011*101011
+Verification: PASS
+
+Mirror: input=110100
+Output: 001011*110100
+Verification: PASS
+
+Grouping: input=110100
+Output: 110*100
+Verification: PASS
+
+Copy: input=110100
+Output: 001011*001011
+Verification: PASS
+
+Mirror: input=001100
+Output: 110011*110011
+Verification: PASS
+
+Grouping: input=001100
+Output: 001*100
+Verification: PASS
+
+Copy: input=001100
+Output: 110011*110011
+Verification: PASS
+
+Mirror: input=101100
+Output: 010011*110010
+Verification: PASS
+
+Grouping: input=101100
+Output: 101*100
+Verification: PASS
+
+Copy: input=101100
+Output: 010011*010011
+Verification: PASS
+
+Mirror: input=011100
+Output: 100011*110001
+Verification: PASS
+
+Grouping: input=011100
+Output: 011*100
+Verification: PASS
+
+Copy: input=011100
+Output: 100011*100011
+Verification: PASS
+
+Mirror: input=111100
+Output: 000011*110000
+Verification: PASS
+
+Grouping: input=111100
+Output: 111*100
+Verification: PASS
+
+Copy: input=111100
+Output: 000011*000011
+Verification: PASS
+
+Mirror: input=000010
+Output: 111101*101111
+Verification: PASS
+
+Grouping: input=000010
+Output: 000*010
+Verification: PASS
+
+Copy: input=000010
+Output: 111101*111101
+Verification: PASS
+
+Mirror: input=100010
+Output: 011101*101110
+Verification: PASS
+
+Grouping: input=100010
+Output: 100*010
+Verification: PASS
+
+Copy: input=100010
+Output: 011101*011101
+Verification: PASS
+
+Mirror: input=010010
+Output: 101101*101101
+Verification: PASS
+
+Grouping: input=010010
+Output: 010*010
+Verification: PASS
+
+Copy: input=010010
+Output: 101101*101101
+Verification: PASS
+
+Mirror: input=110010
+Output: 001101*101100
+Verification: PASS
+
+Grouping: input=110010
+Output: 110*010
+Verification: PASS
+
+Copy: input=110010
+Output: 001101*001101
+Verification: PASS
+
+Mirror: input=001010
+Output: 110101*101011
+Verification: PASS
+
+Grouping: input=001010
+Output: 001*010
+Verification: PASS
+
+Copy: input=001010
+Output: 110101*110101
+Verification: PASS
+
+Mirror: input=101010
+Output: 010101*101010
+Verification: PASS
+
+Grouping: input=101010
+Output: 101*010
+Verification: PASS
+
+Copy: input=101010
+Output: 010101*010101
+Verification: PASS
+
+Mirror: input=011010
+Output: 100101*101001
+Verification: PASS
+
+Grouping: input=011010
+Output: 011*010
+Verification: PASS
+
+Copy: input=011010
+Output: 100101*100101
+Verification: PASS
+
+Mirror: input=111010
+Output: 000101*101000
+Verification: PASS
+
+Grouping: input=111010
+Output: 111*010
+Verification: PASS
+
+Copy: input=111010
+Output: 000101*000101
+Verification: PASS
+
+Mirror: input=000110
+Output: 111001*100111
+Verification: PASS
+
+Grouping: input=000110
+Output: 000*110
+Verification: PASS
+
+Copy: input=000110
+Output: 111001*111001
+Verification: PASS
+
+Mirror: input=100110
+Output: 011001*100110
+Verification: PASS
+
+Grouping: input=100110
+Output: 100*110
+Verification: PASS
+
+Copy: input=100110
+Output: 011001*011001
+Verification: PASS
+
+Mirror: input=010110
+Output: 101001*100101
+Verification: PASS
+
+Grouping: input=010110
+Output: 010*110
+Verification: PASS
+
+Copy: input=010110
+Output: 101001*101001
+Verification: PASS
+
+Mirror: input=110110
+Output: 001001*100100
+Verification: PASS
+
+Grouping: input=110110
+Output: 110*110
+Verification: PASS
+
+Copy: input=110110
+Output: 001001*001001
+Verification: PASS
+
+Mirror: input=001110
+Output: 110001*100011
+Verification: PASS
+
+Grouping: input=001110
+Output: 001*110
+Verification: PASS
+
+Copy: input=001110
+Output: 110001*110001
+Verification: PASS
+
+Mirror: input=101110
+Output: 010001*100010
+Verification: PASS
+
+Grouping: input=101110
+Output: 101*110
+Verification: PASS
+
+Copy: input=101110
+Output: 010001*010001
+Verification: PASS
+
+Mirror: input=011110
+Output: 100001*100001
+Verification: PASS
+
+Grouping: input=011110
+Output: 011*110
+Verification: PASS
+
+Copy: input=011110
+Output: 100001*100001
+Verification: PASS
+
+Mirror: input=111110
+Output: 000001*100000
+Verification: PASS
+
+Grouping: input=111110
+Output: 111*110
+Verification: PASS
+
+Copy: input=111110
+Output: 000001*000001
+Verification: PASS
+
+Mirror: input=000001
+Output: 111110*011111
+Verification: PASS
+
+Grouping: input=000001
+Output: 000*001
+Verification: PASS
+
+Copy: input=000001
+Output: 111110*111110
+Verification: PASS
+
+Mirror: input=100001
+Output: 011110*011110
+Verification: PASS
+
+Grouping: input=100001
+Output: 100*001
+Verification: PASS
+
+Copy: input=100001
+Output: 011110*011110
+Verification: PASS
+
+Mirror: input=010001
+Output: 101110*011101
+Verification: PASS
+
+Grouping: input=010001
+Output: 010*001
+Verification: PASS
+
+Copy: input=010001
+Output: 101110*101110
+Verification: PASS
+
+Mirror: input=110001
+Output: 001110*011100
+Verification: PASS
+
+Grouping: input=110001
+Output: 110*001
+Verification: PASS
+
+Copy: input=110001
+Output: 001110*001110
+Verification: PASS
+
+Mirror: input=001001
+Output: 110110*011011
+Verification: PASS
+
+Grouping: input=001001
+Output: 001*001
+Verification: PASS
+
+Copy: input=001001
+Output: 110110*110110
+Verification: PASS
+
+Mirror: input=101001
+Output: 010110*011010
+Verification: PASS
+
+Grouping: input=101001
+Output: 101*001
+Verification: PASS
+
+Copy: input=101001
+Output: 010110*010110
+Verification: PASS
+
+Mirror: input=011001
+Output: 100110*011001
+Verification: PASS
+
+Grouping: input=011001
+Output: 011*001
+Verification: PASS
+
+Copy: input=011001
+Output: 100110*100110
+Verification: PASS
+
+Mirror: input=111001
+Output: 000110*011000
+Verification: PASS
+
+Grouping: input=111001
+Output: 111*001
+Verification: PASS
+
+Copy: input=111001
+Output: 000110*000110
+Verification: PASS
+
+Mirror: input=000101
+Output: 111010*010111
+Verification: PASS
+
+Grouping: input=000101
+Output: 000*101
+Verification: PASS
+
+Copy: input=000101
+Output: 111010*111010
+Verification: PASS
+
+Mirror: input=100101
+Output: 011010*010110
+Verification: PASS
+
+Grouping: input=100101
+Output: 100*101
+Verification: PASS
+
+Copy: input=100101
+Output: 011010*011010
+Verification: PASS
+
+Mirror: input=010101
+Output: 101010*010101
+Verification: PASS
+
+Grouping: input=010101
+Output: 010*101
+Verification: PASS
+
+Copy: input=010101
+Output: 101010*101010
+Verification: PASS
+
+Mirror: input=110101
+Output: 001010*010100
+Verification: PASS
+
+Grouping: input=110101
+Output: 110*101
+Verification: PASS
+
+Copy: input=110101
+Output: 001010*001010
+Verification: PASS
+
+Mirror: input=001101
+Output: 110010*010011
+Verification: PASS
+
+Grouping: input=001101
+Output: 001*101
+Verification: PASS
+
+Copy: input=001101
+Output: 110010*110010
+Verification: PASS
+
+Mirror: input=101101
+Output: 010010*010010
+Verification: PASS
+
+Grouping: input=101101
+Output: 101*101
+Verification: PASS
+
+Copy: input=101101
+Output: 010010*010010
+Verification: PASS
+
+Mirror: input=011101
+Output: 100010*010001
+Verification: PASS
+
+Grouping: input=011101
+Output: 011*101
+Verification: PASS
+
+Copy: input=011101
+Output: 100010*100010
+Verification: PASS
+
+Mirror: input=111101
+Output: 000010*010000
+Verification: PASS
+
+Grouping: input=111101
+Output: 111*101
+Verification: PASS
+
+Copy: input=111101
+Output: 000010*000010
+Verification: PASS
+
+Mirror: input=000011
+Output: 111100*001111
+Verification: PASS
+
+Grouping: input=000011
+Output: 000*011
+Verification: PASS
+
+Copy: input=000011
+Output: 111100*111100
+Verification: PASS
+
+Mirror: input=100011
+Output: 011100*001110
+Verification: PASS
+
+Grouping: input=100011
+Output: 100*011
+Verification: PASS
+
+Copy: input=100011
+Output: 011100*011100
+Verification: PASS
+
+Mirror: input=010011
+Output: 101100*001101
+Verification: PASS
+
+Grouping: input=010011
+Output: 010*011
+Verification: PASS
+
+Copy: input=010011
+Output: 101100*101100
+Verification: PASS
+
+Mirror: input=110011
+Output: 001100*001100
+Verification: PASS
+
+Grouping: input=110011
+Output: 110*011
+Verification: PASS
+
+Copy: input=110011
+Output: 001100*001100
+Verification: PASS
+
+Mirror: input=001011
+Output: 110100*001011
+Verification: PASS
+
+Grouping: input=001011
+Output: 001*011
+Verification: PASS
+
+Copy: input=001011
+Output: 110100*110100
+Verification: PASS
+
+Mirror: input=101011
+Output: 010100*001010
+Verification: PASS
+
+Grouping: input=101011
+Output: 101*011
+Verification: PASS
+
+Copy: input=101011
+Output: 010100*010100
+Verification: PASS
+
+Mirror: input=011011
+Output: 100100*001001
+Verification: PASS
+
+Grouping: input=011011
+Output: 011*011
+Verification: PASS
+
+Copy: input=011011
+Output: 100100*100100
+Verification: PASS
+
+Mirror: input=111011
+Output: 000100*001000
+Verification: PASS
+
+Grouping: input=111011
+Output: 111*011
+Verification: PASS
+
+Copy: input=111011
+Output: 000100*000100
+Verification: PASS
+
+Mirror: input=000111
+Output: 111000*000111
+Verification: PASS
+
+Grouping: input=000111
+Output: 000*111
+Verification: PASS
+
+Copy: input=000111
+Output: 111000*111000
+Verification: PASS
+
+Mirror: input=100111
+Output: 011000*000110
+Verification: PASS
+
+Grouping: input=100111
+Output: 100*111
+Verification: PASS
+
+Copy: input=100111
+Output: 011000*011000
+Verification: PASS
+
+Mirror: input=010111
+Output: 101000*000101
+Verification: PASS
+
+Grouping: input=010111
+Output: 010*111
+Verification: PASS
+
+Copy: input=010111
+Output: 101000*101000
+Verification: PASS
+
+Mirror: input=110111
+Output: 001000*000100
+Verification: PASS
+
+Grouping: input=110111
+Output: 110*111
+Verification: PASS
+
+Copy: input=110111
+Output: 001000*001000
+Verification: PASS
+
+Mirror: input=001111
+Output: 110000*000011
+Verification: PASS
+
+Grouping: input=001111
+Output: 001*111
+Verification: PASS
+
+Copy: input=001111
+Output: 110000*110000
+Verification: PASS
+
+Mirror: input=101111
+Output: 010000*000010
+Verification: PASS
+
+Grouping: input=101111
+Output: 101*111
+Verification: PASS
+
+Copy: input=101111
+Output: 010000*010000
+Verification: PASS
+
+Mirror: input=011111
+Output: 100000*000001
+Verification: PASS
+
+Grouping: input=011111
+Output: 011*111
+Verification: PASS
+
+Copy: input=011111
+Output: 100000*100000
+Verification: PASS
+
+Mirror: input=111111
+Output: 000000*000000
+Verification: PASS
+
+Grouping: input=111111
+Output: 111*111
+Verification: PASS
+
+Copy: input=111111
+Output: 000000*000000
+Verification: PASS
+
+Decimal to unary: input=0
+Output: 
+Verification: PASS
+
+Unary to decimal: input=
+Output: 0
+Verification: PASS
+
+Decimal to unary: input=1
+Output: 1
+Verification: PASS
+
+Unary to decimal: input=1
+Output: 1
+Verification: PASS
+
+Decimal to unary: input=2
+Output: 11
+Verification: PASS
+
+Unary to decimal: input=11
+Output: 2
+Verification: PASS
+
+Decimal to unary: input=3
+Output: 111
+Verification: PASS
+
+Unary to decimal: input=111
+Output: 3
+Verification: PASS
+
+Decimal to unary: input=4
+Output: 1111
+Verification: PASS
+
+Unary to decimal: input=1111
+Output: 4
+Verification: PASS
+
+Decimal to unary: input=5
+Output: 11111
+Verification: PASS
+
+Unary to decimal: input=11111
+Output: 5
+Verification: PASS
+
+Decimal to unary: input=6
+Output: 111111
+Verification: PASS
+
+Unary to decimal: input=111111
+Output: 6
+Verification: PASS
+
+Decimal to unary: input=7
+Output: 1111111
+Verification: PASS
+
+Unary to decimal: input=1111111
+Output: 7
+Verification: PASS
+
+Decimal to unary: input=8
+Output: 11111111
+Verification: PASS
+
+Unary to decimal: input=11111111
+Output: 8
+Verification: PASS
+
+Decimal to unary: input=9
+Output: 111111111
+Verification: PASS
+
+Unary to decimal: input=111111111
+Output: 9
+Verification: PASS
+
+1 - Voyager
+2 - Turing machine
+3 - All experiments
+0 - Exit
+Choice: 
