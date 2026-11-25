@@ -1,0 +1,12 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: insertion_results.csv>
+index,Method,N,Type,Time_s,Comparisons,Moves,Correct
+0,Insertion sort,1200,Random,0.000152171,357565.4,358770.0,YES
+1,Insertion sort,1200,Ascending,1.652e-06,1199.0,2398.0,YES
+2,Insertion sort,1200,Descending,0.00029519,719400.0,721797.2,YES
+3,Insertion sort,2000,Random,0.000418115,1000691.6,1002698.2,YES
+4,Insertion sort,2000,Ascending,2.732e-06,1999.0,3998.0,YES
+5,Insertion sort,2000,Descending,0.000783734,1999000.0,2002995.6,YES
+6,Insertion sort,7500,Random,0.005347006,14076945.2,14084452.8,YES
+7,Insertion sort,7500,Ascending,1.0208e-05,7499.0,14998.0,YES
+8,Insertion sort,7500,Descending,0.010477605,28121250.0,28136218.8,YES
