@@ -1,174 +1,153 @@
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <fstream>
-#include <iomanip>
 #include <iostream>
-#include <memory>
+#include <vector>
+#include <array>
+#include <algorithm>
+#include <chrono>
 #include <random>
 #include <string>
-#include <unordered_set>
-#include <vector>
+#include <iomanip>
+#include <fstream>
+#include <stdexcept>
 using namespace std;
 using Clock = chrono::steady_clock;
-
-struct SortStats { unsigned long long comparisons = 0, moves = 0; };
-void shellSort(vector<int>& a, SortStats& stats) {
-    for (int gap = (int)a.size() / 2; gap > 0; gap /= 2)
-        for (int i = gap; i < (int)a.size(); ++i) {
-            int value = a[i], j = i;
-            ++stats.moves;
-            while (j >= gap) {
-                ++stats.comparisons;
-                if (a[j-gap] <= value) break;
-                a[j] = a[j-gap];
-                ++stats.moves;
-                j -= gap;
+constexpr int TRIALS=5, QUERIES=10000;
+mt19937 generator(42);
+struct Statistics { long long comparisons=0, moves=0; };
+vector<int> generateArray(int n) {
+    uniform_int_distribution<int> dist(0,999999);
+    vector<int> a(n); for(int& x:a) x=dist(generator); return a;
+}
+// Вариант 3. Сортировка Шелла.
+Statistics shellSort(vector<int>& a) {
+    Statistics s; int n=static_cast<int>(a.size());
+    for(int gap=n/2;gap>0;gap/=2) {
+        for(int i=gap;i<n;++i) {
+            int key=a[i], j=i; ++s.moves;
+            while(j>=gap) {
+                ++s.comparisons; if(a[j-gap]<=key) break;
+                a[j]=a[j-gap]; ++s.moves; j-=gap;
             }
-            a[j] = value;
-            ++stats.moves;
+            a[j]=key; ++s.moves;
         }
-}
-void insertionSort(vector<int>& a, SortStats& stats) {
-    for (int i = 1; i < (int)a.size(); ++i) {
-        int value = a[i], j = i;
-        ++stats.moves;
-        while (j > 0) {
-            ++stats.comparisons;
-            if (a[j-1] <= value) break;
-            a[j] = a[j-1];
-            ++stats.moves;
-            --j;
-        }
-        a[j] = value;
-        ++stats.moves;
     }
+    return s;
 }
-vector<int> makeData(int n, unsigned seed) {
-    mt19937 rng(seed);
-    uniform_int_distribution<int> dist(-100000, 100000);
-    vector<int> a(n);
-    for (int& x : a) x = dist(rng);
-    return a;
+// Вариант 8. Сортировка простой вставкой.
+Statistics insertionSort(vector<int>& a) {
+    Statistics s;
+    for(int i=1;i<static_cast<int>(a.size());++i) {
+        int key=a[i],j=i-1; ++s.moves;
+        while(j>=0) {
+            ++s.comparisons; if(a[j]<=key) break;
+            a[j+1]=a[j]; ++s.moves; --j;
+        }
+        a[j+1]=key; ++s.moves;
+    }
+    return s;
 }
-struct TrieNode {
-    array<unique_ptr<TrieNode>, 10> next{};
-    bool terminal = false;
-};
-class DigitTrie {
-    TrieNode root;
-    static string key(int x) { return to_string((long long)x + 1000000LL); }
+// Вариант 6. Поиск по бору (неотрицательные целые ключи).
+class Trie {
+    struct Node { array<int,10> next; bool terminal=false; Node(){next.fill(-1);} };
+    vector<Node> nodes{Node{}};
 public:
-    void insert(int x) {
-        TrieNode* p = &root;
-        for (char c : key(x)) {
-            int d = c - '0';
-            if (!p->next[d]) p->next[d] = make_unique<TrieNode>();
-            p = p->next[d].get();
+    void insert(int value) {
+        if(value<0) throw invalid_argument("Negative key");
+        int current=0;
+        for(char c:to_string(value)) {
+            int d=c-'0';
+            if(nodes[current].next[d]==-1) {
+                nodes[current].next[d]=static_cast<int>(nodes.size());
+                nodes.emplace_back();
+            }
+            current=nodes[current].next[d];
         }
-        p->terminal = true;
+        nodes[current].terminal=true;
     }
-    bool contains(int x) const {
-        const TrieNode* p = &root;
-        for (char c : key(x)) {
-            int d = c - '0';
-            if (!p->next[d]) return false;
-            p = p->next[d].get();
+    bool search(int value,long long& steps) const {
+        if(value<0) return false;
+        int current=0;
+        for(char c:to_string(value)) {
+            ++steps; int next=nodes[current].next[c-'0'];
+            if(next==-1) return false;
+            current=next;
         }
-        return p->terminal;
+        return nodes[current].terminal;
     }
 };
-void runSort(int variant) {
-    vector<int> sizes = variant == 3 ? vector<int>{2000,5000,6800} : vector<int>{1200,2000,7500};
-    string filename = "sort_variant" + to_string(variant) + ".csv";
-    ofstream csv(filename);
-    csv << "variant,size,case,trial,time_us,comparisons,moves,correct\n";
-    cout << "\nSORT variant " << variant << " (5 trials per case)\n";
-    for (int n : sizes) for (int kind = 0; kind < 3; ++kind) {
-        string label = kind == 0 ? "random" : kind == 1 ? "ascending" : "descending";
-        double sum = 0;
-        unsigned long long totalComparisons = 0, totalMoves = 0;
-        for (int trial = 1; trial <= 5; ++trial) {
-            vector<int> a = makeData(n, 2026u + (unsigned)n + (unsigned)trial);
-            if (kind != 0) {
-                sort(a.begin(), a.end());
-                if (kind == 2) reverse(a.begin(), a.end());
-            }
-            SortStats stats;
-            auto start = Clock::now();
-            if (variant == 3) shellSort(a, stats); else insertionSort(a, stats);
-            auto stop = Clock::now();
-            double us = chrono::duration<double, micro>(stop-start).count();
-            bool ok = is_sorted(a.begin(), a.end());
-            csv << variant << ',' << n << ',' << label << ',' << trial << ',' << fixed << setprecision(3) << us << ',' << stats.comparisons << ',' << stats.moves << ',' << (ok ? "YES" : "NO") << '\n';
-            sum += us;
-            totalComparisons += stats.comparisons;
-            totalMoves += stats.moves;
-            if (!ok) { cerr << "SORT ERROR\n"; return; }
+// Измерение времени и проверка результатов сортировки.
+void testSorting(bool shell) {
+    vector<int> sizes=shell?vector<int>{4000,10000,13600}:vector<int>{1200,2000,7500};
+    string method=shell?"Shell sort":"Insertion sort";
+    string filename=shell?"shell_results.csv":"insertion_results.csv";
+    ofstream file(filename); if(!file) throw runtime_error("Cannot create CSV");
+    file<<"Method,N,Type,Time_s,Comparisons,Moves,Correct\n";
+    array<string,3> types{"Random","Ascending","Descending"};
+    for(int n:sizes) for(int type=0;type<3;++type) {
+        double seconds=0; long long comparisons=0,moves=0; bool correct=true;
+        for(int trial=0;trial<TRIALS;++trial) {
+            auto a=generateArray(n);
+            if(type==1) sort(a.begin(),a.end());
+            if(type==2) sort(a.rbegin(),a.rend());
+            auto expected=a; sort(expected.begin(),expected.end());
+            auto start=Clock::now();
+            auto stat=shell?shellSort(a):insertionSort(a);
+            auto finish=Clock::now();
+            seconds+=chrono::duration<double>(finish-start).count();
+            comparisons+=stat.comparisons; moves+=stat.moves;
+            correct=correct&&(a==expected);
         }
-        cout << "N=" << n << " " << setw(10) << label << " average=" << fixed << setprecision(2) << sum/5 << " us  avg comparisons=" << totalComparisons/5 << " avg moves=" << totalMoves/5 << " sorted=YES\n";
+        cout<<fixed<<setprecision(9)<<method<<" | N = "<<n<<" | "<<types[type]<<" | t = "<<seconds/TRIALS<<" s | C = "<<double(comparisons)/TRIALS<<" | M = "<<double(moves)/TRIALS<<" | Correct: "<<(correct?"YES":"NO")<<'\n';
+        file<<fixed<<setprecision(9)<<method<<','<<n<<','<<types[type]<<','<<seconds/TRIALS<<','<<double(comparisons)/TRIALS<<','<<double(moves)/TRIALS<<','<<(correct?"YES":"NO")<<'\n';
+        if(!correct) throw runtime_error("Sorting verification failed");
     }
-    cout << "Saved " << filename << "\n";
+    cout<<"Saved: "<<filename<<'\n';
 }
-void runSearch(int variant) {
-    vector<int> sizes = variant == 3 ? vector<int>{2000,5000,6800} : vector<int>{1200,2000,7500};
-    string filename = "poisk_variant" + to_string(variant) + ".csv";
-    ofstream csv(filename);
-    csv << "variant,size,case,trial,search_us,correct\n";
-    cout << "\nPOISK variant " << variant << " (5 trials per case)\n";
-    for (int n : sizes) for (int kind = 0; kind < 2; ++kind) {
-        string label = kind == 0 ? "present" : "absent";
-        double sum = 0;
-        for (int trial = 1; trial <= 5; ++trial) {
-            vector<int> a = makeData(n, 707u + (unsigned)n + (unsigned)trial);
-            int query = kind == 0 ? a[n/2] : 2000000;
-            bool found = false;
-            if (variant == 3) {
-                DigitTrie trie;
-                for (int x : a) trie.insert(x);
-                auto start = Clock::now();
-                found = trie.contains(query);
-                auto stop = Clock::now();
-                double us = chrono::duration<double, micro>(stop-start).count();
-                bool ok = found == (kind == 0);
-                csv << variant << ',' << n << ',' << label << ',' << trial << ',' << fixed << setprecision(3) << us << ',' << (ok ? "YES" : "NO") << '\n';
-                sum += us;
-                if (!ok) { cerr << "SEARCH ERROR\n"; return; }
-            } else {
-                unordered_set<int> table(a.begin(), a.end());
-                auto start = Clock::now();
-                found = table.find(query) != table.end();
-                auto stop = Clock::now();
-                double us = chrono::duration<double, micro>(stop-start).count();
-                bool ok = found == (kind == 0);
-                csv << variant << ',' << n << ',' << label << ',' << trial << ',' << fixed << setprecision(3) << us << ',' << (ok ? "YES" : "NO") << '\n';
-                sum += us;
-                if (!ok) { cerr << "SEARCH ERROR\n"; return; }
+// Успешный и неуспешный поиск. Построение бора не входит во время поиска.
+void testTrieSearch() {
+    ofstream file("trie_results.csv"); if(!file) throw runtime_error("Cannot create CSV");
+    file<<"Method,N,Type,Time_s,Steps,Correct\n";
+    for(int n:{500,2500,6500}) {
+        auto data=generateArray(n); Trie trie;
+        for(int x:data) trie.insert(x);
+        auto reference=data; sort(reference.begin(),reference.end());
+        uniform_int_distribution<int> index(0,n-1), key(0,999999);
+        for(int type=0;type<2;++type) {
+            vector<int> queries(QUERIES);
+            for(int& q:queries) {
+                if(type==0) q=data[index(generator)];
+                else do { q=key(generator); } while(binary_search(reference.begin(),reference.end(),q));
             }
+            double seconds=0; long long totalSteps=0; bool correct=true;
+            vector<unsigned char> results(QUERIES);
+            for(int trial=0;trial<TRIALS;++trial) {
+                long long steps=0; auto start=Clock::now();
+                for(int i=0;i<QUERIES;++i) results[i]=trie.search(queries[i],steps);
+                auto finish=Clock::now();
+                seconds+=chrono::duration<double>(finish-start).count(); totalSteps+=steps;
+                for(int i=0;i<QUERIES;++i) correct=correct&&(results[i]==(type==0));
+            }
+            string name=type==0?"Successful":"Unsuccessful";
+            double t=seconds/(TRIALS*QUERIES), steps=double(totalSteps)/(TRIALS*QUERIES);
+            cout<<fixed<<setprecision(9)<<"Trie search | N = "<<n<<" | "<<name<<" | t = "<<t<<" s | Steps = "<<steps<<" | Correct: "<<(correct?"YES":"NO")<<'\n';
+            file<<fixed<<setprecision(9)<<"Trie search,"<<n<<','<<name<<','<<t<<','<<steps<<','<<(correct?"YES":"NO")<<'\n';
+            if(!correct) throw runtime_error("Search verification failed");
         }
-        cout << "N=" << n << " " << setw(7) << label << " average=" << fixed << setprecision(3) << sum/5 << " us  correct=YES\n";
     }
-    cout << "Saved " << filename << "\n";
+    cout<<"Saved: trie_results.csv\n";
 }
 int main() {
-    while (true) {
-        cout << "\n=== LAB 1: SORT + POISK ===\n"
-             << "1 - SORT variant 3 (Shell)\n"
-             << "2 - SORT variant 8 (Insertion)\n"
-             << "3 - POISK variant 3 (Digit trie)\n"
-             << "4 - POISK variant 8 (Hash table)\n"
-             << "5 - Run all\n"
-             << "0 - Exit\nChoose: ";
-        int choice;
-        if (!(cin >> choice)) break;
-        switch (choice) {
-            case 1: runSort(3); break;
-            case 2: runSort(8); break;
-            case 3: runSearch(3); break;
-            case 4: runSearch(8); break;
-            case 5: runSort(3); runSort(8); runSearch(3); runSearch(8); break;
-            case 0: return 0;
-            default: cout << "Unknown choice.\n";
+    try {
+        for(;;) {
+            cout<<"\nLaboratory work No. 1\n1. Shell sort (Variant 3)\n2. Insertion sort (Variant 8)\n3. Trie search (Variant 6)\n4. Run all experiments\n0. Exit\nChoose: ";
+            int choice; if(!(cin>>choice)) return cin.eof()?0:1;
+            switch(choice) {
+                case 0:return 0;
+                case 1:testSorting(true);break;
+                case 2:testSorting(false);break;
+                case 3:testTrieSearch();break;
+                case 4:testSorting(true);testSorting(false);testTrieSearch();break;
+                default:cout<<"Invalid option\n";
+            }
         }
-    }
+    } catch(const exception& e) {cerr<<e.what()<<'\n';return 1;}
 }
