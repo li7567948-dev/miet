@@ -1,0 +1,9 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: trie_results.csv>
+index,Method,N,Type,Time_s,Steps,Correct
+0,Trie search,500,Successful,1.9e-08,5.877,YES
+1,Trie search,500,Unsuccessful,1.7e-08,3.4631,YES
+2,Trie search,2500,Successful,2e-08,5.8752,YES
+3,Trie search,2500,Unsuccessful,1.7e-08,4.1877,YES
+4,Trie search,6500,Successful,2.2e-08,5.8867,YES
+5,Trie search,6500,Unsuccessful,2.4e-08,4.5624,YES
