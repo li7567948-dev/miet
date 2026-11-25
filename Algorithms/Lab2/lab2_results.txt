@@ -1,0 +1,79 @@
+
+Laboratory work No. 2
+1 - Sequence variant 3
+2 - Sequence variant 4
+3 - Sequence variant 6
+4 - Graph variant 4 (manual input)
+5 - Graph variant 6 (manual input)
+6 - All sequences and sample graph
+0 - Exit
+Choice: 
+Sequence variant 3
+N=10, iterative=0.054537 us, recursive=0.06496 us, check=PASS
+a[0] = 3
+a[1] = 9
+a[2] = 13.5
+a[3] = 13.5
+a[4] = 10.125
+a[5] = 6.075
+a[6] = 3.0375
+a[7] = 1.301785714
+a[8] = 0.4881696429
+a[9] = 0.1627232143
+N=50, iterative=0.175454 us, recursive=0.254685 us, check=PASS
+N=100, iterative=0.340065 us, recursive=0.381748 us, check=PASS
+
+Sequence variant 4
+N=10, iterative=0.050482 us, recursive=0.060143 us, check=PASS
+a[0] = 0.3333333333
+a[1] = 0.05555555556
+a[2] = 0.01851851852
+a[3] = 0.009259259259
+a[4] = 0.006172839506
+a[5] = 0.005144032922
+a[6] = 0.005144032922
+a[7] = 0.006001371742
+a[8] = 0.008001828989
+a[9] = 0.01200274348
+N=50, iterative=0.227491 us, recursive=0.265346 us, check=PASS
+N=100, iterative=0.337003 us, recursive=1.789945 us, check=PASS
+
+Sequence variant 6
+N=10, iterative=0.110843 us, recursive=0.063876 us, check=PASS
+a[0] = 0.5
+a[1] = 1.5
+a[2] = 2.25
+a[3] = 2.25
+a[4] = 1.6875
+a[5] = 1.0125
+a[6] = 0.50625
+a[7] = 0.2169642857
+a[8] = 0.08136160714
+a[9] = 0.02712053571
+N=50, iterative=0.224217 us, recursive=0.220959 us, check=PASS
+N=100, iterative=0.350447 us, recursive=0.486783 us, check=PASS
+
+Sample graph (not a textbook variant)
+Kruskal
+1 - 2: 1
+2 - 3: 2
+3 - 4: 3
+Total weight: 6
+Prim
+1 - 2: 1
+2 - 3: 2
+3 - 4: 3
+Total weight: 6
+Kruskal time: 3.798 us
+Prim time: 0.625 us
+Equal weights: PASS
+
+Laboratory work No. 2
+1 - Sequence variant 3
+2 - Sequence variant 4
+3 - Sequence variant 6
+4 - Graph variant 4 (manual input)
+5 - Graph variant 6 (manual input)
+6 - All sequences and sample graph
+0 - Exit
+Choice: 
